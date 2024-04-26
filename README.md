@@ -5,7 +5,7 @@
 1. Luis Ángel González Romo A01235962
 2. Raúl Kenyu Medina Takada A01236331
 3. Aaron Inzunza Inzunza A01114528
-4. 
+4. Alexander Alexeev Bogaychuk A01740751
 5. 
 
 
