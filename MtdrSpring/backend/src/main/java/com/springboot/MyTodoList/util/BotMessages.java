@@ -3,14 +3,14 @@ package com.springboot.MyTodoList.util;
 public enum BotMessages {
 	
 	HELLO_MYTODO_BOT(
-	"Hello! I'm MyTodoList Bot!\nType a new todo item below and press the send button (blue arrow), or select an option below:"),
-	BOT_REGISTERED_STARTED("Bot registered and started succesfully!"),
-	ITEM_DONE("Item done! Select /todolist to return to the list of todo items, or /start to go to the main screen."), 
-	ITEM_UNDONE("Item undone! Select /todolist to return to the list of todo items, or /start to go to the main screen."), 
-	ITEM_DELETED("Item deleted! Select /todolist to return to the list of todo items, or /start to go to the main screen."),
-	TYPE_NEW_TODO_ITEM("Type a new todo item below and press the send button (blue arrow) on the rigth-hand side."),
-	NEW_ITEM_ADDED("New item added! Select /todolist to return to the list of todo items, or /start to go to the main screen."),
-	BYE("Bye! Select /start to resume!");
+	"¡Hola, soy DevBot! Tu asistente personal para administrar tus tasks de Devops\nSelecciona una opción de las siguientes, o con el teclado escribe y envía una nueva task que quieras agregar:"),
+	BOT_REGISTERED_STARTED("DevBot registrado e inicializado exitosamente."),
+	ITEM_DONE("¡Task completada! Selecciona /tasks para mostrar la lista de tasks, o /iniciar para ir al Menu principal."), 
+	ITEM_UNDONE("¡Task devuelta a lista de task pendientes! Selecciona /tasks para mostrar la lista de tasks, o /iniciar para ir al Menu principal."), 
+	ITEM_DELETED("¡Task borrada! Selecciona /tasks para mostrar la lista de tasks, o /iniciar para ir al Menu principal."),
+	TYPE_NEW_TODO_ITEM("Con el teclado escribe y envía una nueva task que quieras agregar:"),
+	NEW_ITEM_ADDED("¡Task creada! Selecciona /tasks para mostrar la lista de tasks, o /iniciar para ir al Menu principal."),
+	BYE("¡Hasta luego! Selecciona /iniciar para volver a con tu DevBot");
 
 	private String message;
 
