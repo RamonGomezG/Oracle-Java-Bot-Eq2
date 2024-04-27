@@ -6,7 +6,7 @@
 2. Raúl Kenyu Medina Takada A01236331
 3. Aaron Inzunza Inzunza A01114528
 4. Alexander Alexeev Bogaychuk A01740751
-5. 
+5. Ramón Esaú Gómez González A00832787
 
 
 
