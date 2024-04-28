@@ -166,6 +166,23 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 					KeyboardRow currentRow = new KeyboardRow();
 					currentRow.add(item.getDescription());
+					String prio = "";
+					String comp = "";
+					if(item.getPriority() == 1) {
+						prio = "HIGH";
+					} else if(item.getPriority() == 2) {
+						prio = "MEDIUM";
+					} else if(item.getPriority() == 3) {
+						prio = "LOW";
+					}
+					if(item.getComplexity() == 1) {
+						comp = "LOW";
+					} else if(item.getComplexity() == 2) {
+						comp = "MEDIUM";
+					} else if(item.getComplexity() == 3) {
+						comp = "HIGH";
+					}
+					currentRow.add("P: " + prio + ", C: " + comp);
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
 					keyboard.add(currentRow);
 				}
@@ -221,7 +238,22 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			else {
 				try {
 					ToDoItem newItem = new ToDoItem();
-					newItem.setDescription(messageTextFromTelegram);
+					String[] array = messageTextFromTelegram.split(";");
+					int i = 0;
+					for (String palabra : array) {
+						if(i == 0) {
+							newItem.setDescription(palabra);
+						} else if (i == 1) {
+							newItem.setDetails(palabra);
+						} else if (i == 2) {
+							int prioridad = Integer.valueOf(palabra);
+							newItem.setPriority(prioridad);
+						} else if (i == 3) {
+							int complejidad = Integer.valueOf(palabra);
+							newItem.setComplexity(complejidad);
+						}
+						i = i + 1;
+					}
 					newItem.setCreation_ts(OffsetDateTime.now());
 					newItem.setDone(false);
 					ResponseEntity entity = addToDoItem(newItem);
