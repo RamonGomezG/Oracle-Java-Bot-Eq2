@@ -6,7 +6,7 @@ public enum BotLabels {
 	HIDE_MAIN_SCREEN("Ocultar menu principal"),
 	LIST_ALL_ITEMS("Mostrar todas las Tasks"), 
 	ADD_NEW_ITEM("Crear Task"),
-	DONE("LISTO"),
+	DONE("LISTO ✅"),
 	UNDO("EDITAR"),
 	DELETE("BORRAR"),
 	MY_TODO_LIST("MIS DEVOPS TASKS"),
