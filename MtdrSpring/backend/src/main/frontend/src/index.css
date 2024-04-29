@@ -46,6 +46,8 @@ body {
   }
   #newiteminput {
     width: 100%;
+    padding: 10px 20px;
+    /* border-radius: 50px 0px 0px 50px; */
   }
   div#newinputform {
     width: 100%;
@@ -115,6 +117,7 @@ body {
   button.AddButton {
     color: #FEF9F2;
     background-color: #5F7D4F;
+    /* border-radius: 0px 50px 50px 0px; */
   }
   button.AddButton:hover {
     background-color: #6F915D;
