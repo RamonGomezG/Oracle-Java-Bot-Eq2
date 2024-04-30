@@ -17,55 +17,28 @@ function App() {
     })
     .then(response => {
       if (response.ok) {
-        return response;
+        const remainingItems = items.filter(item => item.id !== deleteId);
+        setItems(remainingItems);
       } else {
         throw new Error('Something went wrong ...');
       }
     })
-    .then(
-      () => {
-        const remainingItems = items.filter(item => item.id !== deleteId);
-        setItems(remainingItems);
-      },
-      (error) => {
-        setError(error);
-      }
-    );
+    .catch(error => {
+      setError(error);
+    });
   }
 
   function toggleDone(event, id, description, done, details, priority, complexity) {
     event.preventDefault();
     modifyItem(id, description, done, details, priority, complexity).then(
-      () => { reloadOneIteam(id); },
-      (error) => { setError(error); }
-    );
-  }
-
-  function reloadOneIteam(id){
-    fetch(API_LIST + "/" + id)
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error('Something went wrong ...');
-      }
-    })
-    .then(
-      (result) => {
-        const items2 = items.map(
-          x => (x.id === id ? {
-             ...x,
-             description: result.description,
-             done: result.done,
-             details: result.details,
-             priority: result.priority,
-             complexity: result.complexity
-            } : x));
-        setItems(items2);
+      updatedItem => {
+        const updatedItems = items.map(item => item.id === id ? updatedItem : item);
+        setItems(updatedItems);
       },
-      (error) => {
+      error => {
         setError(error);
-      });
+      }
+    );
   }
 
   function modifyItem(id, description, done, details, priority, complexity) {
@@ -79,7 +52,7 @@ function App() {
     })
     .then(response => {
       if (response.ok) {
-        return response;
+        return response.json();
       } else {
         throw new Error('Something went wrong ...');
       }
@@ -87,24 +60,7 @@ function App() {
   }
 
   useEffect(() => {
-    setLoading(true);
-    fetch(API_LIST)
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error('Something went wrong ...');
-      }
-    })
-    .then(
-      (result) => {
-        setLoading(false);
-        setItems(result);
-      },
-      (error) => {
-        setLoading(false);
-        setError(error);
-      });
+    reloadItems();
   }, []);
 
   function addItem(newItem){
@@ -115,33 +71,46 @@ function App() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(newItem),
-    }).then((response) => {
+    }).then(response => {
+      if (response.ok) {
+        reloadItems();  // Reload all items to see the new addition
+        setInserting(false);
+      } else {
+        throw new Error('Something went wrong ...');
+      }
+    }).catch(error => {
+      setInserting(false);
+      setError(error);
+    });
+  }
+
+  function reloadItems() {
+    setLoading(true);
+    fetch(API_LIST)
+    .then(response => {
       if (response.ok) {
         return response.json();
       } else {
         throw new Error('Something went wrong ...');
       }
-    }).then(
-      (result) => {
-        setItems([result, ...items]);
-        setInserting(false);
-      },
-      (error) => {
-        setInserting(false);
-        setError(error);
-      }
-    );
+    })
+    .then(items => {
+      setLoading(false);
+      setItems(items);
+    })
+    .catch(error => {
+      setLoading(false);
+      setError(error);
+    });
   }
 
   return (
     <div className="App">
       <img src="/logo-transparente.png" alt="Logo" style={{ maxWidth: '200px', paddingBottom: '20px' }} />
       <NewItem addItem={addItem} isInserting={isInserting}/>
-      { error &&
-        <p>Error: {error.message}</p>
-      }
-      { isLoading && <CircularProgress /> }
-      { !isLoading &&
+      {error && <p>Error: {error.message}</p>}
+      {isLoading && <CircularProgress />}
+      {!isLoading &&
         <Table>
           <TableBody>
             {items.map(item => (
@@ -151,7 +120,7 @@ function App() {
                 <TableCell>{item.priority}</TableCell>
                 <TableCell>{item.complexity}</TableCell>
                 <TableCell>
-                  <Moment format="MMM Do YY">{item.createdAt}</Moment>
+                  <Moment format="MMM Do YY">{item.creation_ts}</Moment>
                 </TableCell>
                 <TableCell>
                   <Button variant="contained" onClick={(event) => toggleDone(event, item.id, item.description, !item.done, item.details, item.priority, item.complexity)} size="small">
