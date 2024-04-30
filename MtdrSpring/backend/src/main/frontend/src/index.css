@@ -17,7 +17,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Full viewport height */
 }
 
 .App {
@@ -27,7 +26,7 @@ body {
   flex-direction: column;
   align-items: center;
   font-size: max(12px, min(2vw, 18px)); /* Responsive font size */
-  margin: auto; /* Center the .App container vertically and horizontally */
+  margin: 1em auto; /* Center the .App container vertically and horizontally */
   padding: 1rem;
   position: relative;
   box-shadow: 0 10px 18px 0 rgba(0, 0, 0, 0.2), 0 4.5rem 8rem 0 rgba(0, 0, 0, 0.1);
@@ -46,7 +45,7 @@ div#maincontent {
 }
 
 h1, h2 {
-  margin: 0.5rem 0; /* Unified margin for headings */
+  margin: 1rem 0; /* Unified margin for headings */
   padding: 0;
 }
 
