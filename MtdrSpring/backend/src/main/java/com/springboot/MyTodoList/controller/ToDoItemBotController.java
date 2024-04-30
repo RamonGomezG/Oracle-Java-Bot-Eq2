@@ -165,25 +165,25 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				for (ToDoItem item : activeItems) {
 
 					KeyboardRow currentRow = new KeyboardRow();
-					currentRow.add(item.getDescription());
+					// currentRow.add(item.getDescription());
 					String prio = "";
 					String comp = "";
 					if(item.getPriority() == 1) {
-						prio = "HIGH";
+						prio = "ALTA";
 					} else if(item.getPriority() == 2) {
-						prio = "MEDIUM";
+						prio = "MEDIA";
 					} else if(item.getPriority() == 3) {
-						prio = "LOW";
+						prio = "BAJA";
 					}
 					if(item.getComplexity() == 1) {
-						comp = "LOW";
+						comp = "BAJA";
 					} else if(item.getComplexity() == 2) {
-						comp = "MEDIUM";
+						comp = "MEDIA";
 					} else if(item.getComplexity() == 3) {
-						comp = "HIGH";
+						comp = "ALTA";
 					}
-					currentRow.add("P: " + prio + ", C: " + comp);
-					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
+					// currentRow.add("Prioridad: " + prio + ", Complejidad: " + comp);
+					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + " " + item.getDescription() + " " + "Prioridad: " + prio + ", Complejidad: " + comp + " " + BotLabels.DONE.getLabel());
 					keyboard.add(currentRow);
 				}
 
@@ -246,10 +246,10 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						} else if (i == 1) {
 							newItem.setDetails(palabra);
 						} else if (i == 2) {
-							int prioridad = Integer.valueOf(palabra);
+							int prioridad = Integer.valueOf(palabra.strip());
 							newItem.setPriority(prioridad);
 						} else if (i == 3) {
-							int complejidad = Integer.valueOf(palabra);
+							int complejidad = Integer.valueOf(palabra.strip());
 							newItem.setComplexity(complejidad);
 						}
 						i = i + 1;
