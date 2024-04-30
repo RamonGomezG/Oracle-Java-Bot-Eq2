@@ -168,22 +168,22 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					// currentRow.add(item.getDescription());
 					String prio = "";
 					String comp = "";
-					if(item.getPriority() == 1) {
+					if(item.getPriority() <= 1) {
 						prio = "ALTA";
 					} else if(item.getPriority() == 2) {
 						prio = "MEDIA";
-					} else if(item.getPriority() == 3) {
+					} else if(item.getPriority() >= 3) {
 						prio = "BAJA";
 					}
-					if(item.getComplexity() == 1) {
+					if(item.getComplexity() <= 1) {
 						comp = "BAJA";
 					} else if(item.getComplexity() == 2) {
 						comp = "MEDIA";
-					} else if(item.getComplexity() == 3) {
+					} else if(item.getComplexity() >= 3) {
 						comp = "ALTA";
 					}
 					// currentRow.add("Prioridad: " + prio + ", Complejidad: " + comp);
-					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + " " + item.getDescription() + " " + "Prioridad: " + prio + ", Complejidad: " + comp + " " + BotLabels.DONE.getLabel());
+					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + " " + item.getDescription() + "\n" + "Prioridad: " + prio + "\nComplejidad: " + comp + "\n\t" + BotLabels.DONE.getLabel());
 					keyboard.add(currentRow);
 				}
 
