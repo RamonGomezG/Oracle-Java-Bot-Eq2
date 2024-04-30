@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, TextField, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
+import { Button, TextField, MenuItem, FormControl, InputLabel, Select, Grid } from '@mui/material';
 
 function NewItem(props) {
   const [item, setItem] = useState({
@@ -34,57 +34,72 @@ function NewItem(props) {
   return (
     <div id="newinputform">
       <form onSubmit={handleSubmit}>
-        <TextField
-          name="description"
-          label="Task Description"
-          type="text"
-          variant="outlined"
-          value={item.description}
-          onChange={handleChange}
-        />
-        <TextField
-          name="details"
-          label="Detailed Description"
-          type="text"
-          variant="outlined"
-          value={item.details}
-          onChange={handleChange}
-        />
-        <FormControl variant="outlined" fullWidth margin="normal">
-          <InputLabel>Priority</InputLabel>
-          <Select
-            name="priority"
-            value={item.priority}
-            onChange={handleChange}
-            label="Priority"
-          >
-            <MenuItem value={1}>High</MenuItem>
-            <MenuItem value={2}>Medium</MenuItem>
-            <MenuItem value={3}>Low</MenuItem>
-          </Select>
-        </FormControl>
-        <FormControl variant="outlined" fullWidth margin="normal">
-          <InputLabel>Complexity</InputLabel>
-          <Select
-            name="complexity"
-            value={item.complexity}
-            onChange={handleChange}
-            label="Complexity"
-          >
-            <MenuItem value={1}>Simple</MenuItem>
-            <MenuItem value={2}>Moderate</MenuItem>
-            <MenuItem value={3}>Complex</MenuItem>
-          </Select>
-        </FormControl>
-        <Button
-          className="AddButton"
-          variant="contained"
-          type="submit"
-          disabled={props.isInserting}
-          size="small"
-        >
-          {props.isInserting ? 'Adding…' : 'Add'}
-        </Button>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              name="description"
+              label="Task Description"
+              type="text"
+              variant="outlined"
+              fullWidth
+              value={item.description}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              name="details"
+              label="Detailed Description"
+              type="text"
+              variant="outlined"
+              fullWidth
+              value={item.details}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <FormControl variant="outlined" fullWidth>
+              <InputLabel>Priority</InputLabel>
+              <Select
+                name="priority"
+                value={item.priority}
+                onChange={handleChange}
+                label="Priority"
+              >
+                <MenuItem value={1}>High</MenuItem>
+                <MenuItem value={2}>Medium</MenuItem>
+                <MenuItem value={3}>Low</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={4}>
+            <FormControl variant="outlined" fullWidth>
+              <InputLabel>Complexity</InputLabel>
+              <Select
+                name="complexity"
+                value={item.complexity}
+                onChange={handleChange}
+                label="Complexity"
+              >
+                <MenuItem value={1}>Simple</MenuItem>
+                <MenuItem value={2}>Moderate</MenuItem>
+                <MenuItem value={3}>Complex</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={4}>
+            <Button
+              className="AddButton"
+              variant="contained"
+              type="submit"
+              disabled={props.isInserting}
+              fullWidth
+              size="large"
+            >
+              {props.isInserting ? 'Adding…' : 'Add'}
+            </Button>
+          </Grid>
+        </Grid>
       </form>
     </div>
   );

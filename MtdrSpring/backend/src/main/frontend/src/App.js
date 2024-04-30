@@ -110,33 +110,62 @@ function App() {
       <NewItem addItem={addItem} isInserting={isInserting}/>
       {error && <p>Error: {error.message}</p>}
       {isLoading && <CircularProgress />}
-      {!isLoading &&
-        <Table>
-          <TableBody>
-            {items.map(item => (
-              <TableRow key={item.id} hover>
-                <TableCell>{item.description}</TableCell>
-                <TableCell>{item.details}</TableCell>
-                <TableCell>{item.priority}</TableCell>
-                <TableCell>{item.complexity}</TableCell>
-                <TableCell>
-                  <Moment format="MMM Do YY">{item.creation_ts}</Moment>
-                </TableCell>
-                <TableCell>
-                  <Button variant="contained" onClick={(event) => toggleDone(event, item.id, item.description, !item.done, item.details, item.priority, item.complexity)} size="small">
-                    {item.done ? 'Undo' : 'Done'}
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button startIcon={<DeleteIcon />} variant="contained" onClick={() => deleteItem(item.id)} size="small">
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      }
+      {!isLoading && (
+        <>
+          <h2 className="section-header">Pending Tasks</h2>
+          <Table>
+            <TableBody>
+              {items.filter(item => !item.done).map(item => (
+                <TableRow key={item.id} className="not-done">
+                  <TableCell>{item.description}</TableCell>
+                  <TableCell>{item.details}</TableCell>
+                  <TableCell>{item.priority}</TableCell>
+                  <TableCell>{item.complexity}</TableCell>
+                  <TableCell>
+                    <Moment format="MMM Do YY">{item.creation_ts}</Moment>
+                  </TableCell>
+                  <TableCell>
+                    <Button variant="contained" onClick={(event) => toggleDone(event, item.id, item.description, !item.done, item.details, item.priority, item.complexity)} size="small">
+                      Done
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button startIcon={<DeleteIcon />} variant="contained" onClick={() => deleteItem(item.id)} size="small">
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <h2 className="section-header">Completed Tasks</h2>
+          <Table>
+            <TableBody>
+              {items.filter(item => item.done).map(item => (
+                <TableRow key={item.id} className="done">
+                  <TableCell>{item.description}</TableCell>
+                  <TableCell>{item.details}</TableCell>
+                  <TableCell>{item.priority}</TableCell>
+                  <TableCell>{item.complexity}</TableCell>
+                  <TableCell>
+                    <Moment format="MMM Do YY">{item.creation_ts}</Moment>
+                  </TableCell>
+                  <TableCell>
+                    <Button variant="contained" onClick={(event) => toggleDone(event, item.id, item.description, !item.done, item.details, item.priority, item.complexity)} size="small">
+                      Undo
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button startIcon={<DeleteIcon />} variant="contained" onClick={() => deleteItem(item.id)} size="small">
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </>
+      )}
     </div>
   );
 }

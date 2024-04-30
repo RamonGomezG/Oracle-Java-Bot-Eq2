@@ -12,10 +12,29 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import { createTheme, ThemeProvider, CssBaseline } from '@mui/material';
+
+// Configurar el tema oscuro de Material-UI
+const theme = createTheme({
+  palette: {
+    mode: 'dark', // Activar el modo oscuro
+    background: {
+      default: '#3A3632' // Establece el color de fondo global de la aplicación
+    },
+    primary: {
+      main: '#5F7D4F', // Color principal personalizado
+    },
+    // Añadir más configuraciones de color según sea necesario
+  },
+  // Configuraciones adicionales para componentes específicos si es necesario
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <App />
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
