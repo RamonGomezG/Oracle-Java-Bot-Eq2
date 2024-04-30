@@ -50,6 +50,7 @@ public class ToDoItemService {
             toDoItem.setPriority(td.getPriority());
             toDoItem.setComplexity(td.getComplexity());
             toDoItem.setDone(td.isDone());
+            toDoItem.setIdAssignee(td.getIdAssignee());
             return toDoItemRepository.save(toDoItem);
         }else{
             return null;
