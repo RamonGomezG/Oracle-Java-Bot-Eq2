@@ -4,11 +4,11 @@ public enum BotLabels {
 	
 	SHOW_MAIN_SCREEN("🤖Menu principal🤖"), 
 	HIDE_MAIN_SCREEN("⬇️Ocultar menu principal⬇️"),
-	LIST_ALL_ITEMS("🗒Mostrar todas las Tasks🗒"), 
+	LIST_ALL_ITEMS("🧑‍💻Mostrar mis DevOps Tasks🧑‍💻"), 
 	ADD_NEW_ITEM("🆕Crear Task🆕"),
 	DONE("✅"),
-	UNDO("DESHACER⤴️"),
-	DELETE("BORRAR❌"),
+	UNDO("⤴️"),
+	DELETE("🗑"),
 	MY_TODO_LIST("🧑‍💻MIS DEVOPS TASKS🧑‍💻"),
 	DASH("-");
 
