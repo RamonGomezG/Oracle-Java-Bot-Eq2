@@ -84,7 +84,31 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				} catch (TelegramApiException e) {
 					logger.error(e.getLocalizedMessage(), e);
 				}
+			
+				//VER LOS DETALLES DE UN TODO, SE UTILIZA EL EMOJI DEL DIAMANTE PARA IDENTIFICAR ESTA ACCIÓN
+			} else if (messageTextFromTelegram.indexOf(BotLabels.TODO_DETAILS.getLabel()) != -1) {
+				
+				String todoSelected = messageTextFromTelegram.substring(0,messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()));
+				Integer todoId = Integer.valueOf(todoSelected);
 
+				try {
+
+					ToDoItem item = getToDoItemById(todoId).getBody();
+
+					SendMessage messageToTelegram = new SendMessage();
+					messageToTelegram.setChatId(chatId);
+					messageToTelegram.setText( "Título: " + item.getDescription()+ ", " + "Descripción: " + " " + item.getDetails() + ", " + "Prioridad: " + item.getPriority() + ", " + "Complejidad: " + item.getComplexity() + ", " + " Estatus: " + "---");
+
+					try {
+						execute(messageToTelegram);
+					} catch (TelegramApiException e) {
+						logger.error(e.getLocalizedMessage(), e);
+					}
+
+				} catch (Exception e) {
+					logger.error(e.getLocalizedMessage(), e);
+				}
+			
 			} else if (messageTextFromTelegram.indexOf(BotLabels.DONE.getLabel()) != -1) {
 
 				String done = messageTextFromTelegram.substring(0,
@@ -187,7 +211,8 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						comp = "😰";
 					}
 					// currentRow.add("Prioridad: " + prio + ", Complejidad: " + comp);
-					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + " " + item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp + " | " + BotLabels.DONE.getLabel());
+					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + " " + item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp);
+					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + " " + BotLabels.DONE.getLabel());
 					keyboard.add(currentRow);
 				}
 
@@ -196,7 +221,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 				for (ToDoItem item : doneItems) {
 					KeyboardRow currentRow = new KeyboardRow();
-					currentRow.add(item.getDescription());
+					currentRow.add(item.getID() + " " + BotLabels.DASH.getLabel() + " " + item.getDescription() + BotLabels.TODO_DETAILS.getLabel());
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UNDO.getLabel());
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DELETE.getLabel());
 					keyboard.add(currentRow);
