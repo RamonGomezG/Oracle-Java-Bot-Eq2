@@ -163,7 +163,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				myTodoListTitleRow.add(BotLabels.MY_TODO_LIST.getLabel());
 				keyboard.add(myTodoListTitleRow);
 
-				List<ToDoItem> activeItems = allItems.stream().filter(item -> item.isDone() == false && item.getIdAssignee().equals(item.getIdAssignee()))
+				List<ToDoItem> activeItems = allItems.stream().filter(item -> item.isDone() == false && item.getIdAssignee().equals(String.valueOf(user_id)))
 						.collect(Collectors.toList());
 
 				for (ToDoItem item : activeItems) {
@@ -191,7 +191,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					keyboard.add(currentRow);
 				}
 
-				List<ToDoItem> doneItems = allItems.stream().filter(item -> item.isDone() == true && item.getIdAssignee().equals(item.getIdAssignee()))
+				List<ToDoItem> doneItems = allItems.stream().filter(item -> item.isDone() == true && item.getIdAssignee().equals(String.valueOf(user_id)))
 						.collect(Collectors.toList());
 
 				for (ToDoItem item : doneItems) {
