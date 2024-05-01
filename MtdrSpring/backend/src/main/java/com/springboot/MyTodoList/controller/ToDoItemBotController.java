@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.ws.rs.Priorities;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -84,7 +86,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				} catch (TelegramApiException e) {
 					logger.error(e.getLocalizedMessage(), e);
 				}
-			
+				
 				//VER LOS DETALLES DE UN TODO, SE UTILIZA EL EMOJI DEL DIAMANTE PARA IDENTIFICAR ESTA ACCIÓN
 			} else if (messageTextFromTelegram.indexOf(BotLabels.TODO_DETAILS.getLabel()) != -1) {
 				
@@ -95,9 +97,53 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 					ToDoItem item = getToDoItemById(todoId).getBody();
 
+					String priority;
+					switch (item.getPriority()) {
+						case 1:
+							priority = "🟥 ALTA";
+							break;
+						case 2:
+							priority = "🟧 MEDIA";
+							break;
+						case 3:
+							priority = "🟨 BAJA";
+							break;
+						default:
+							priority = "INDEFINIDA";
+					}
+
+					String complexity;
+					switch (item.getComplexity()) {
+						case 1:
+							complexity = "😎 BAJA";
+							break;
+						case 2:
+							complexity = "🤨 MEDIA";
+							break;
+						case 3:
+							complexity = "😨 ALTA";
+							break;
+						default:
+							complexity = "INDEFINIDA";
+					}
+
+					String status; 
+					if (item.isDone()) {
+						status = "Completada ⛳️"; 
+					} else {
+						status = "En progreso 🛠️"; 
+					}
+
+					SendMessage messageToTelegram1 = new SendMessage();
+					messageToTelegram1.setChatId(chatId);
+					messageToTelegram1.setText( "Claro! A continuación te muestro los detalles de tu task!");
+					ReplyKeyboardRemove keyboardMarkup1 = new ReplyKeyboardRemove(true);
+					messageToTelegram1.setReplyMarkup(keyboardMarkup1);
+					execute(messageToTelegram1);
+
 					SendMessage messageToTelegram = new SendMessage();
 					messageToTelegram.setChatId(chatId);
-					messageToTelegram.setText( "Título: " + item.getDescription()+ ", " + "Descripción: " + " " + item.getDetails() + ", " + "Prioridad: " + item.getPriority() + ", " + "Complejidad: " + item.getComplexity() + ", " + " Estatus: " + "---");
+					messageToTelegram.setText( "Título: " + item.getDescription()+ ", " + "\nDescripción: " + " " + item.getDetails() + ", " + "\nPrioridad: " + priority + ", " + "\nComplejidad: " + complexity + ", " + " \nEstatus: " + status);
 					ReplyKeyboardRemove keyboardMarkup = new ReplyKeyboardRemove(true);
 					messageToTelegram.setReplyMarkup(keyboardMarkup);
 					execute(messageToTelegram);
@@ -208,8 +254,8 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						comp = "😰";
 					}
 					// currentRow.add("Prioridad: " + prio + ", Complejidad: " + comp);
-					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + " " + BotLabels.TODO_DETAILS.getLabel() +item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp);
-					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + " " + BotLabels.DONE.getLabel());
+					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp);
+					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
 					keyboard.add(currentRow);
 				}
 
@@ -218,7 +264,24 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 				for (ToDoItem item : doneItems) {
 					KeyboardRow currentRow = new KeyboardRow();
-					currentRow.add(item.getID() + " " + BotLabels.DASH.getLabel() + " " + BotLabels.TODO_DETAILS.getLabel() + item.getDescription());
+					String prio = "";
+					String comp = "";
+					if(item.getPriority() <= 1) {
+						prio = "🟥";
+					} else if(item.getPriority() == 2) {
+						prio = "🟧";
+					} else if(item.getPriority() >= 3) {
+						prio = "🟨";
+					}
+					if(item.getComplexity() <= 1) {
+						comp = "😎";
+					} else if(item.getComplexity() == 2) {
+						comp = "🤨";
+					} else if(item.getComplexity() >= 3) {
+						comp = "😰";
+					}
+					// currentRow.add("Prioridad: " + prio + ", Complejidad: " + comp);
+					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp);
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UNDO.getLabel());
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DELETE.getLabel());
 					keyboard.add(currentRow);
