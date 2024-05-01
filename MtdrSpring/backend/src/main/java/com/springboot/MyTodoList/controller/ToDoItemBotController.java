@@ -98,12 +98,9 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					SendMessage messageToTelegram = new SendMessage();
 					messageToTelegram.setChatId(chatId);
 					messageToTelegram.setText( "Título: " + item.getDescription()+ ", " + "Descripción: " + " " + item.getDetails() + ", " + "Prioridad: " + item.getPriority() + ", " + "Complejidad: " + item.getComplexity() + ", " + " Estatus: " + "---");
-
-					try {
-						execute(messageToTelegram);
-					} catch (TelegramApiException e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
+					ReplyKeyboardRemove keyboardMarkup = new ReplyKeyboardRemove(true);
+					messageToTelegram.setReplyMarkup(keyboardMarkup);
+					execute(messageToTelegram);
 
 				} catch (Exception e) {
 					logger.error(e.getLocalizedMessage(), e);
