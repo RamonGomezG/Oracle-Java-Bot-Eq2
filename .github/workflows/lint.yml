@@ -32,3 +32,24 @@ jobs:
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASH_SEVERITY: error
+          VALIDATE_SHELL_SMFT: false
+          VALIDATECHECKOV: false
+          VALIDATEBASH: false
+          VALIDATEBASH_EXEC: false
+          VALIDATECSS: false
+          VALIDATE_GOOGLE_JAVA_FORMAT: false
+          VALIDATE_JAVA: false
+          VALIDATE_JAVASCRIPT_STANDARD: false
+          VALIDATE_JSCPD: false
+          VALIDATE_KUBERNETES_KUBECONFORM: false
+          VALIDATE_MARKDOWN: false
+          VALIDATE_NATURAL_LANGUAGE: false
+          VALIDATE_PYTHON_BLACK: false
+          VALIDATE_PYLINT: false
+          VALIDATE_FLAKE8: false
+          VALIDATE_ISORT: false
+          VALIDATE_PYTHON_RUFF: false
+          VALIDATE_SHELL_SHFMT: false
+          VALIDATE_TERRAFORM_FMT: false
+          VALIDATE_TERRAFORM_TFLINT: false
+          VALIDATE_YAML: false
