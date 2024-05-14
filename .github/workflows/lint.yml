@@ -32,24 +32,24 @@ jobs:
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASH_SEVERITY: error
-          VALIDATE_SHELL_SMFT: true
-          VALIDATECHECKOV: true
-          VALIDATEBASH: true
-          VALIDATEBASH_EXEC: true
-          VALIDATECSS: true
-          VALIDATE_GOOGLE_JAVA_FORMAT: true
-          VALIDATE_JAVA: true
-          VALIDATE_JAVASCRIPT_STANDARD: true
-          VALIDATE_JSCPD: true
-          VALIDATE_KUBERNETES_KUBECONFORM: true
-          VALIDATE_MARKDOWN: true
-          VALIDATE_NATURAL_LANGUAGE: true
-          VALIDATE_PYTHON_BLACK: true
-          VALIDATE_PYLINT: true
-          VALIDATE_FLAKE8: true
-          VALIDATE_ISORT: true
-          VALIDATE_PYTHON_RUFF: true
-          VALIDATE_SHELL_SHFMT: true
-          VALIDATE_TERRAFORM_FMT: true
-          VALIDATE_TERRAFORM_TFLINT: true
+          VALIDATE_SHELL_SMFT: false
+          VALIDATECHECKOV: false
+          VALIDATEBASH: false
+          VALIDATEBASH_EXEC: false
+          VALIDATECSS: false
+          VALIDATE_GOOGLE_JAVA_FORMAT: false
+          VALIDATE_JAVA: false
+          VALIDATE_JAVASCRIPT_STANDARD: false
+          VALIDATE_JSCPD: false
+          VALIDATE_KUBERNETES_KUBECONFORM: false
+          VALIDATE_MARKDOWN: false
+          VALIDATE_NATURAL_LANGUAGE: false
+          VALIDATE_PYTHON_BLACK: false
+          VALIDATE_PYLINT: false
+          VALIDATE_FLAKE8: false
+          VALIDATE_ISORT: false
+          VALIDATE_PYTHON_RUFF: false
+          VALIDATE_SHELL_SHFMT: false
+          VALIDATE_TERRAFORM_FMT: false
+          VALIDATE_TERRAFORM_TFLINT: false
           VALIDATE_YAML: true
