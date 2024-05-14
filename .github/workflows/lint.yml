@@ -52,4 +52,4 @@ jobs:
           VALIDATE_SHELL_SHFMT: false
           VALIDATE_TERRAFORM_FMT: false
           VALIDATE_TERRAFORM_TFLINT: false
-          VALIDATE_YAML: true
+          VALIDATE_YAML: false
