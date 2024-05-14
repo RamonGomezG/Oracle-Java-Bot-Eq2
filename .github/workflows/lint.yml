@@ -31,7 +31,6 @@ jobs:
         env:
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BASH_SEVERITY: error
           VALIDATE_SHELL_SMFT: false
           VALIDATECHECKOV: false
           VALIDATEBASH: false
@@ -53,3 +52,4 @@ jobs:
           VALIDATE_TERRAFORM_FMT: false
           VALIDATE_TERRAFORM_TFLINT: false
           VALIDATE_YAML: false
+          BASH_SEVERITY: error
