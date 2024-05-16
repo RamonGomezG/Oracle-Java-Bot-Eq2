@@ -29,7 +29,7 @@ body {
   margin: 1em auto; /* Center the .App container vertically and horizontally */
   padding: 1rem;
   position: relative;
-  box-shadow: 0 10px 18px 0 #00000033, 0 4.5rem 8rem 0 #0000001a;
+  box-shadow: 0 10px 18px 0 #0003, 0 4.5rem 8rem 0 #0000001a;
   border-radius: 0.5rem;
   width: 100%; /* Full width */
   max-width: 50rem; /* Max width, adjust as needed */
