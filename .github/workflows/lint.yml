@@ -46,7 +46,7 @@ jobs:
           VALIDATE_MARKDOWN: false
           VALIDATE_NATURAL_LANGUAGE: false
           VALIDATE_PYTHON_BLACK: false
-          VALIDATE_PYLINT: false
+          VALIDATE_PYTHON_PYLINT: false
           VALIDATE_FLAKE8: false
           VALIDATE_ISORT: false
           VALIDATE_PYTHON_RUFF: false
