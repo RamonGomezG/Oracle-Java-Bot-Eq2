@@ -9,8 +9,8 @@ body {
   background-color: #3A3632; /* Set the background color */
   width: 100%;
   color: #FEF9F2;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -19,7 +19,7 @@ body {
   align-items: center;
 }
 
-.App {
+.app {
   background: #201E1C; /* Background color for the app */
   color: #FEF9F2;
   display: flex;
@@ -29,7 +29,7 @@ body {
   margin: 1em auto; /* Center the .App container vertically and horizontally */
   padding: 1rem;
   position: relative;
-  box-shadow: 0 10px 18px 0 rgba(0, 0, 0, 0.2), 0 4.5rem 8rem 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 18px 0 #0003, 0 4.5rem 8rem 0 #0000001a;
   border-radius: 0.5rem;
   width: 100%; /* Full width */
   max-width: 50rem; /* Max width, adjust as needed */
@@ -59,7 +59,7 @@ div#newinputform form {
   margin: 0 auto;
 }
 
-table#itemlistNotDone, table#itemlistDone {
+table#itemlist-not-done, table#itemlist-done {
   margin-bottom: 2rem; /* Uniform bottom margin for tables */
 }
 
@@ -95,12 +95,12 @@ input, button, input[type="text"] {
   padding-left: 10px;
 }
 
-button.AddButton, button.DeleteButton, button.DoneButton {
+button.add-button, button.delete-button, button.done-button {
   font-size: max(8px, min(2vw, 12px));
   padding: 1.5em 0.5em;
   background-color: #5F7D4F; /* Primary button background color */
 }
 
-button.AddButton:hover, button.DeleteButton:hover, button.DoneButton:hover {
+button.add-button:hover, button.delete-button:hover, button.done-button:hover {
   background-color: #6F915D; /* Hover color for buttons */
 }

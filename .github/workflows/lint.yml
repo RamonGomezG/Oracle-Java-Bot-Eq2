@@ -1,0 +1,57 @@
+
+name: Lint
+
+on:  # yamllint disable-line rule:2
+  push: null
+  pull_request: null
+
+permissions: { }
+
+jobs:
+  build:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: read
+      # To report GitHub Actions status checks
+      statuses: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # super-linter needs the full git history to get the
+          # list of files that changed across commits
+          fetch-depth: 0
+
+      - name: Super-linter
+        uses: super-linter/super-linter@v6  # x-release-please-version
+        env:
+          # To report GitHub Actions status checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          YAML_ON_ERROR_WARNING: true
+          VALIDATE_ALLCODEBASE: false
+          VALIDATE_SHELL_SMFT: false
+          VALIDATE_CHECKOV: false
+          VALIDATE_BASH: false
+          VALIDATE_BASH_EXEC: false
+          VALIDATE_CSS: false
+          VALIDATE_GOOGLE_JAVA_FORMAT: false
+          VALIDATE_JAVA: false
+          VALIDATE_JAVASCRIPT_STANDARD: false
+          VALIDATE_JSCPD: false
+          VALIDATE_KUBERNETES_KUBECONFORM: false
+          VALIDATE_MARKDOWN: false
+          VALIDATE_NATURAL_LANGUAGE: false
+          VALIDATE_PYTHON_BLACK: false
+          VALIDATE_PYTHON_PYLINT: false
+          VALIDATE_FLAKE8: false
+          VALIDATE_ISORT: false
+          VALIDATE_PYTHON_RUFF: false
+          VALIDATE_SHELL_SHFMT: false
+          VALIDATE_TERRAFORM_FMT: false
+          VALIDATE_TERRAFORM_TFLINT: false
+          VALIDATE_YAML: false
+          BASH_SEVERITY: error
