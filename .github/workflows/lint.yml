@@ -34,10 +34,10 @@ jobs:
           YAML_ON_ERROR_WARNING: true
           VALIDATE_ALLCODEBASE: false
           VALIDATE_SHELL_SMFT: false
-          VALIDATECHECKOV: false
-          VALIDATEBASH: false
-          VALIDATEBASH_EXEC: false
-          VALIDATECSS: false
+          VALIDATE_CHECKOV: false
+          VALIDATE_BASH: false
+          VALIDATE_BASH_EXEC: false
+          VALIDATE_CSS: false
           VALIDATE_GOOGLE_JAVA_FORMAT: false
           VALIDATE_JAVA: false
           VALIDATE_JAVASCRIPT_STANDARD: false
