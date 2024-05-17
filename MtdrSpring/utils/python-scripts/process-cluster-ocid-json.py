@@ -1,5 +1,5 @@
-import sys
 import json
+import sys
 
 # This simple python file reads JSON and tries to access the lab_oke_cluster_id value
 # and prints the OCID for processing. The JSON is expected
