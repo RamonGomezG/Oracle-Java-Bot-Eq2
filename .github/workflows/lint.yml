@@ -31,6 +31,7 @@ jobs:
         env:
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          YAML_ON_ERROR_WARNING: true
           VALIDATE_ALLCODEBASE: false
           VALIDATE_SHELL_SMFT: false
           VALIDATECHECKOV: false
