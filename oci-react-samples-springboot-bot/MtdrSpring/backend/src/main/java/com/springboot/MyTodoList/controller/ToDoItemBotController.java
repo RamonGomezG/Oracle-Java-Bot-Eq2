@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.Priorities;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -34,9 +32,6 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 	private static final Logger logger = LoggerFactory.getLogger(ToDoItemBotController.class);
 	private ToDoItemService toDoItemService;
 	private String botName;
-	private String toDoAttribute;
-	private Boolean addingToDo;
-	private ToDoItem dummyToDoItem; 
 
 	public ToDoItemBotController(String botToken, String botName, ToDoItemService toDoItemService) {
 		super(botToken);
@@ -44,9 +39,6 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 		logger.info("Bot name: " + botName);
 		this.toDoItemService = toDoItemService;
 		this.botName = botName;
-		this.toDoAttribute = "Description";
-		this.addingToDo = false;
-		this.dummyToDoItem = new ToDoItem();
 	}
 
 	@Override
@@ -56,7 +48,6 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 			String messageTextFromTelegram = update.getMessage().getText();
 			long chatId = update.getMessage().getChatId();
-			long user_id = update.getMessage().getChat().getId();
 
 			if (messageTextFromTelegram.equals(BotCommands.START_COMMAND.getCommand())
 					|| messageTextFromTelegram.equals(BotLabels.SHOW_MAIN_SCREEN.getLabel())) {
@@ -64,7 +55,6 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				SendMessage messageToTelegram = new SendMessage();
 				messageToTelegram.setChatId(chatId);
 				messageToTelegram.setText(BotMessages.HELLO_MYTODO_BOT.getMessage());
-				// messageToTelegram.setText(BotMessages.HELLO_MYTODO_BOT.getMessage() + "Hola dev:" + String.valueOf(user_id));
 
 				ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
 				List<KeyboardRow> keyboard = new ArrayList<>();
@@ -93,72 +83,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				} catch (TelegramApiException e) {
 					logger.error(e.getLocalizedMessage(), e);
 				}
-				
-				//VER LOS DETALLES DE UN TODO, SE UTILIZA EL EMOJI DEL DIAMANTE PARA IDENTIFICAR ESTA ACCIÓN
-			} else if (messageTextFromTelegram.indexOf(BotLabels.TODO_DETAILS.getLabel()) != -1) {
-				
-				String todoSelected = messageTextFromTelegram.substring(0,messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()));
-				Integer todoId = Integer.valueOf(todoSelected);
 
-				try {
-
-					ToDoItem item = getToDoItemById(todoId).getBody();
-
-					String priority;
-					switch (item.getPriority()) {
-						case 1:
-							priority = "🟥 ALTA";
-							break;
-						case 2:
-							priority = "🟧 MEDIA";
-							break;
-						case 3:
-							priority = "🟨 BAJA";
-							break;
-						default:
-							priority = "INDEFINIDA";
-					}
-
-					String complexity;
-					switch (item.getComplexity()) {
-						case 1:
-							complexity = "😎 BAJA";
-							break;
-						case 2:
-							complexity = "🤨 MEDIA";
-							break;
-						case 3:
-							complexity = "😨 ALTA";
-							break;
-						default:
-							complexity = "INDEFINIDA";
-					}
-
-					String status; 
-					if (item.isDone()) {
-						status = "Completada ⛳️"; 
-					} else {
-						status = "En progreso 🛠️"; 
-					}
-
-					SendMessage messageToTelegram1 = new SendMessage();
-					messageToTelegram1.setChatId(chatId);
-					messageToTelegram1.setText( "Claro! A continuación te muestro los detalles de tu task!");
-					ReplyKeyboardRemove keyboardMarkup1 = new ReplyKeyboardRemove(true);
-					messageToTelegram1.setReplyMarkup(keyboardMarkup1);
-					execute(messageToTelegram1);
-
-					SendMessage messageToTelegram = new SendMessage();
-					messageToTelegram.setChatId(chatId);
-					messageToTelegram.setText( "Título: " + item.getDescription()+ ", " + "\nDescripción: " + " " + item.getDetails() + ", " + "\nPrioridad: " + priority + ", " + "\nComplejidad: " + complexity + ", " + " \nEstatus: " + status);
-					ReplyKeyboardRemove keyboardMarkup = new ReplyKeyboardRemove(true);
-					messageToTelegram.setReplyMarkup(keyboardMarkup);
-					execute(messageToTelegram);
-
-				} catch (Exception e) {
-					logger.error(e.getLocalizedMessage(), e);
-				}
-			
 			} else if (messageTextFromTelegram.indexOf(BotLabels.DONE.getLabel()) != -1) {
 
 				String done = messageTextFromTelegram.substring(0,
@@ -213,14 +138,11 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 				BotHelper.sendMessageToTelegram(chatId, BotMessages.BYE.getMessage(), this);
 
-			//LISTAR TODOS LOS TODOS 
 			} else if (messageTextFromTelegram.equals(BotCommands.TODO_LIST.getCommand())
 					|| messageTextFromTelegram.equals(BotLabels.LIST_ALL_ITEMS.getLabel())
 					|| messageTextFromTelegram.equals(BotLabels.MY_TODO_LIST.getLabel())) {
-				
-				//AGREGAR SEGREGACION
-				List<ToDoItem> allItems = getAllToDoItems();
 
+				List<ToDoItem> allItems = getAllToDoItems();
 				ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
 				List<KeyboardRow> keyboard = new ArrayList<>();
 
@@ -237,58 +159,23 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				myTodoListTitleRow.add(BotLabels.MY_TODO_LIST.getLabel());
 				keyboard.add(myTodoListTitleRow);
 
-				List<ToDoItem> activeItems = allItems.stream().filter(item -> item.isDone() == false && (String.valueOf(user_id).equals(item.getIdAssignee())))
+				List<ToDoItem> activeItems = allItems.stream().filter(item -> item.isDone() == false)
 						.collect(Collectors.toList());
 
 				for (ToDoItem item : activeItems) {
 
 					KeyboardRow currentRow = new KeyboardRow();
-					// currentRow.add(item.getDescription());
-					String prio = "";
-					String comp = "";
-					if(item.getPriority() <= 1) {
-						prio = "🟥";
-					} else if(item.getPriority() == 2) {
-						prio = "🟧";
-					} else if(item.getPriority() >= 3) {
-						prio = "🟨";
-					}
-					if(item.getComplexity() <= 1) {
-						comp = "😎";
-					} else if(item.getComplexity() == 2) {
-						comp = "🤨";
-					} else if(item.getComplexity() >= 3) {
-						comp = "😰";
-					}
-					// currentRow.add("Prioridad: " + prio + ", Complejidad: " + comp);
-					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp);
+					currentRow.add(item.getDescription());
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
 					keyboard.add(currentRow);
 				}
 
-				List<ToDoItem> doneItems = allItems.stream().filter(item -> item.isDone() == true && (String.valueOf(user_id).equals(item.getIdAssignee())))
+				List<ToDoItem> doneItems = allItems.stream().filter(item -> item.isDone() == true)
 						.collect(Collectors.toList());
 
 				for (ToDoItem item : doneItems) {
 					KeyboardRow currentRow = new KeyboardRow();
-					String prio = "";
-					String comp = "";
-					if(item.getPriority() <= 1) {
-						prio = "🟥";
-					} else if(item.getPriority() == 2) {
-						prio = "🟧";
-					} else if(item.getPriority() >= 3) {
-						prio = "🟨";
-					}
-					if(item.getComplexity() <= 1) {
-						comp = "😎";
-					} else if(item.getComplexity() == 2) {
-						comp = "🤨";
-					} else if(item.getComplexity() >= 3) {
-						comp = "😰";
-					}
-					// currentRow.add("Prioridad: " + prio + ", Complejidad: " + comp);
-					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp);
+					currentRow.add(item.getDescription());
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UNDO.getLabel());
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DELETE.getLabel());
 					keyboard.add(currentRow);
@@ -311,122 +198,44 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				} catch (TelegramApiException e) {
 					logger.error(e.getLocalizedMessage(), e);
 				}
-			
-				// AGREGAR NUEVO ITEM
-			} else if (addingToDo == true
-					|| messageTextFromTelegram.equals(BotCommands.ADD_ITEM.getCommand())
+
+			} else if (messageTextFromTelegram.equals(BotCommands.ADD_ITEM.getCommand())
 					|| messageTextFromTelegram.equals(BotLabels.ADD_NEW_ITEM.getLabel())) {
-				
-				if (toDoAttribute.equals("Description")) {
-					try {
-						SendMessage messageToTelegram = new SendMessage();
-						messageToTelegram.setChatId(chatId);
-						messageToTelegram.setText("Introduce el título del ToDo:");
-						// send message
-						execute(messageToTelegram);
-	
-					} catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
-					
-					toDoAttribute = "Details";
-
-				} else if (toDoAttribute.equals("Details")) {
-
-					dummyToDoItem.setDescription(messageTextFromTelegram);
-					
-					try {
-						SendMessage messageToTelegram = new SendMessage();
-						messageToTelegram.setChatId(chatId);
-						messageToTelegram.setText("Dale una descriptión al ToDo:");
-						// send message
-						execute(messageToTelegram);
-	
-					} catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
-
-					toDoAttribute = "Priority";
-
-				} else if (toDoAttribute.equals("Priority")) {
-
-					dummyToDoItem.setDetails(messageTextFromTelegram);
-
-					try {
-						SendMessage messageToTelegram = new SendMessage();
-						messageToTelegram.setChatId(chatId);
-						messageToTelegram.setText("¿Qué prioridad tiene? \n (asignala con un numero) 🟥: 1, 🟧: 2, 🟨: 3");
-						// send message
-						execute(messageToTelegram);
-	
-					} catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
-
-					toDoAttribute = "Complexity";
-
-				} else if (toDoAttribute.equals("Complexity")) {
-
-					dummyToDoItem.setPriority(Integer.valueOf(messageTextFromTelegram));
-
-					try {
-						SendMessage messageToTelegram = new SendMessage();
-						messageToTelegram.setChatId(chatId);
-						messageToTelegram.setText("¿Qué complejidad tiene? \n (asignala con un numero) 😎: 1, 🤨: 2, 😰: 3");
-						// send message
-						execute(messageToTelegram);
-	
-					} catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
-
-					toDoAttribute = "Final";
-
-				} else if (toDoAttribute.equals("Final")) {
-
-					dummyToDoItem.setComplexity(Integer.valueOf(messageTextFromTelegram));
-					//agregar todo a bd
-					dummyToDoItem.setCreation_ts(OffsetDateTime.now());
-					dummyToDoItem.setDone(false);
-					dummyToDoItem.setIdAssignee(String.valueOf(user_id));
-					
-					try {
-						ResponseEntity entity = addToDoItem(dummyToDoItem);
-					} catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
-					
-					// Reseteo de las variables de control
-					addingToDo = false;
-					dummyToDoItem = new ToDoItem();
-					toDoAttribute = "Description";
-
-					try {
-						SendMessage messageToTelegram = new SendMessage();
-						messageToTelegram.setChatId(chatId);
-						messageToTelegram.setText(BotMessages.NEW_ITEM_ADDED.getMessage());
-						// send message
-						execute(messageToTelegram);
-	
-					} catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
-				}
-
-			else {
 				try {
 					SendMessage messageToTelegram = new SendMessage();
 					messageToTelegram.setChatId(chatId);
-					messageToTelegram.setText("Disculpa, no te he entendido. Inténtalo de nuevo.");
+					messageToTelegram.setText(BotMessages.TYPE_NEW_TODO_ITEM.getMessage());
+					// hide keyboard
+					ReplyKeyboardRemove keyboardMarkup = new ReplyKeyboardRemove(true);
+					messageToTelegram.setReplyMarkup(keyboardMarkup);
+
 					// send message
 					execute(messageToTelegram);
 
 				} catch (Exception e) {
 					logger.error(e.getLocalizedMessage(), e);
 				}
+
+			}
+
+			else {
+				try {
+					ToDoItem newItem = new ToDoItem();
+					newItem.setDescription(messageTextFromTelegram);
+					newItem.setCreation_ts(OffsetDateTime.now());
+					newItem.setDone(false);
+					ResponseEntity entity = addToDoItem(newItem);
+
+					SendMessage messageToTelegram = new SendMessage();
+					messageToTelegram.setChatId(chatId);
+					messageToTelegram.setText(BotMessages.NEW_ITEM_ADDED.getMessage());
+
+					execute(messageToTelegram);
+				} catch (Exception e) {
+					logger.error(e.getLocalizedMessage(), e);
+				}
 			}
 		}
-	}
 	}
 
 	@Override
@@ -438,10 +247,6 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 	public List<ToDoItem> getAllToDoItems() { 
 		return toDoItemService.findAll();
 	}
-
-	// public List<ToDoItem> getAllDevItems(long devID) {
-	// 	return toDoItemService.findAllDevItems(devID)
-	// }
 
 	// GET BY ID /todolist/{id}
 	public ResponseEntity<ToDoItem> getToDoItemById(@PathVariable int id) {

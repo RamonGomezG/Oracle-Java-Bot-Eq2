@@ -46,11 +46,7 @@ public class ToDoItemService {
             toDoItem.setID(id);
             toDoItem.setCreation_ts(td.getCreation_ts());
             toDoItem.setDescription(td.getDescription());
-            toDoItem.setDetails(td.getDetails());
-            toDoItem.setPriority(td.getPriority());
-            toDoItem.setComplexity(td.getComplexity());
             toDoItem.setDone(td.isDone());
-            toDoItem.setIdAssignee(td.getIdAssignee());
             return toDoItemRepository.save(toDoItem);
         }else{
             return null;
