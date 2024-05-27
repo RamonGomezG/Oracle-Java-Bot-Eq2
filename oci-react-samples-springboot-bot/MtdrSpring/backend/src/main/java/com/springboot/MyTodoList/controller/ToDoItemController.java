@@ -42,8 +42,6 @@ public class ToDoItemController {
         return ResponseEntity.ok()
                 .headers(responseHeaders).build();
     }
-
-    
     //@CrossOrigin
     @PutMapping(value = "todolist/{id}")
     public ResponseEntity updateToDoItem(@RequestBody ToDoItem toDoItem, @PathVariable int id){
