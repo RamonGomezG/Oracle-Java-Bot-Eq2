@@ -28,12 +28,20 @@ public class ToDoItem {
     boolean done;
     @Column(name = "IDASSIGNEE")
     String idAssignee;
+    @Column (name = "IDEPIC")
+    int idEpic; 
+    @Column (name = "IDSPRINT")
+    int idSprint;
+    @Column (name = "IDPROJECT")
+    int idProject;  
+
+
 
     public ToDoItem(){
 
     }
 
-    public ToDoItem(int ID, String description, String details, int priority, int complexity, OffsetDateTime creation_ts, boolean done, String idAssignee) {
+    public ToDoItem(int ID, String description, String details, int priority, int complexity, OffsetDateTime creation_ts, boolean done, String idAssignee, int idEpic, int idSprint, int idProject) {
         this.ID = ID;
         this.description = description;
         this.details = details;
@@ -41,6 +49,9 @@ public class ToDoItem {
         this.creation_ts = creation_ts;
         this.done = done;
         this.idAssignee = idAssignee;
+        this.idEpic = idEpic;
+        this.idSprint = idSprint; 
+        this.idProject = idProject; 
     }
 
     public int getID() {
@@ -107,6 +118,30 @@ public class ToDoItem {
         this.done = done;
     }
 
+    public void setEpic(int idEpic) {
+        this.idEpic = idEpic; 
+    }
+
+    public void setSprint(int idSprint) {
+        this.idSprint = idSprint;
+    }
+
+    public void setProject(int idProject) {
+        this.idProject = idProject;
+    }
+
+    public int getEpic() {
+        return this.idEpic;
+    }
+
+    public int getSprint() {
+        return this.idSprint;
+    }
+
+    public int getProject() {
+        return this.idProject;
+    }
+
     @Override
     public String toString() {
         return "ToDoItem{" +
@@ -118,6 +153,9 @@ public class ToDoItem {
                 ", creation_ts=" + creation_ts +
                 ", done=" + done +
                 ", IDASSIGNEE=" + idAssignee +
+                ", idEpic=" + idEpic +
+                ", idSprint=" + idSprint + 
+                ", idProject=" + idProject +
                 '}';
     }
 }

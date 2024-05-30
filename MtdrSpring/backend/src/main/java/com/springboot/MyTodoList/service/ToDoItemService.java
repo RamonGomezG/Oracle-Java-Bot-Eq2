@@ -51,6 +51,9 @@ public class ToDoItemService {
             toDoItem.setComplexity(td.getComplexity());
             toDoItem.setDone(td.isDone());
             toDoItem.setIdAssignee(td.getIdAssignee());
+            toDoItem.setEpic(td.getEpic());
+            toDoItem.setSprint(td.getSprint());
+            toDoItem.setProject(td.getProject());
             return toDoItemRepository.save(toDoItem);
         }else{
             return null;

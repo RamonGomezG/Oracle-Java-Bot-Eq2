@@ -389,6 +389,11 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					dummyToDoItem.setCreation_ts(OffsetDateTime.now());
 					dummyToDoItem.setDone(false);
 					dummyToDoItem.setIdAssignee(String.valueOf(user_id));
+
+					//Agregamos los atributos automaticos 
+					dummyToDoItem.setEpic(0); // pendiente - agregar proceso para elegirlo 
+					dummyToDoItem.setSprint(0); // se agrega en automatico dependiendo de la semana 
+					dummyToDoItem.setProject(0); // se obtiene a traves del identificador del usuario 
 					
 					try {
 						ResponseEntity entity = addToDoItem(dummyToDoItem);
@@ -412,6 +417,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						logger.error(e.getLocalizedMessage(), e);
 					}
 				}
+			}
 
 			else {
 				try {
@@ -426,7 +432,6 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				}
 			}
 		}
-	}
 	}
 
 	@Override
