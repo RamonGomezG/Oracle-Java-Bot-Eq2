@@ -58,94 +58,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			long chatId = update.getMessage().getChatId();
 			long user_id = update.getMessage().getChat().getId();
 
-			if (addingToDo == true) {
-				if (toDoAttribute.equals("Details")) {
-					dummyToDoItem.setDescription(messageTextFromTelegram);
-					
-					try {
-						SendMessage messageToTelegram = new SendMessage();
-						messageToTelegram.setChatId(chatId);
-						messageToTelegram.setText("Dale una descriptión al ToDo:");
-						// send message
-						execute(messageToTelegram);
-	
-					} catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
-
-					toDoAttribute = "Priority";
-
-				} else if (toDoAttribute.equals("Priority")) {
-
-					dummyToDoItem.setDetails(messageTextFromTelegram);
-
-					try {
-						SendMessage messageToTelegram = new SendMessage();
-						messageToTelegram.setChatId(chatId);
-						messageToTelegram.setText("¿Qué prioridad tiene? \n (asignala con un numero) 🟥: 1, 🟧: 2, 🟨: 3");
-						// send message
-						execute(messageToTelegram);
-	
-					} catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
-
-					toDoAttribute = "Complexity";
-
-				} else if (toDoAttribute.equals("Complexity")) {
-
-					dummyToDoItem.setPriority(Integer.valueOf(messageTextFromTelegram));
-
-					try {
-						SendMessage messageToTelegram = new SendMessage();
-						messageToTelegram.setChatId(chatId);
-						messageToTelegram.setText("¿Qué complejidad tiene? \n (asignala con un numero) 😎: 1, 🤨: 2, 😰: 3");
-						// send message
-						execute(messageToTelegram);
-	
-					} catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
-
-					toDoAttribute = "Final";
-
-				} else if (toDoAttribute.equals("Final")) {
-
-					dummyToDoItem.setComplexity(Integer.valueOf(messageTextFromTelegram));
-					//agregar todo a bd
-					dummyToDoItem.setCreation_ts(OffsetDateTime.now());
-					dummyToDoItem.setDone(false);
-					dummyToDoItem.setIdAssignee(String.valueOf(user_id));
-
-					//Agregamos los atributos automaticos 
-					dummyToDoItem.setEpic(0); // pendiente - agregar proceso para elegirlo 
-					dummyToDoItem.setSprint(0); // se agrega en automatico dependiendo de la semana 
-					dummyToDoItem.setProject(0); // se obtiene a traves del identificador del usuario 
-					
-					try {
-						ResponseEntity entity = addToDoItem(dummyToDoItem);
-					} catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
-					
-					// Reseteo de las variables de control
-					addingToDo = false;
-					dummyToDoItem = new ToDoItem();
-					toDoAttribute = "Description";
-
-					try {
-						SendMessage messageToTelegram = new SendMessage();
-						messageToTelegram.setChatId(chatId);
-						messageToTelegram.setText(BotMessages.NEW_ITEM_ADDED.getMessage());
-						// send message
-						execute(messageToTelegram);
-	
-					} catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
-				}
-				
-			} else if (messageTextFromTelegram.equals(BotCommands.START_COMMAND.getCommand())
+			if (messageTextFromTelegram.equals(BotCommands.START_COMMAND.getCommand())
 					|| messageTextFromTelegram.equals(BotLabels.SHOW_MAIN_SCREEN.getLabel())) {
 
 				SendMessage messageToTelegram = new SendMessage();
@@ -178,23 +91,6 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				try {
 					execute(messageToTelegram);
 				} catch (TelegramApiException e) {
-					logger.error(e.getLocalizedMessage(), e);
-				}
-
-			} else if (messageTextFromTelegram.equals("/reset")) {
-				// Reseteo de las variables de control
-				addingToDo = false;
-				dummyToDoItem = new ToDoItem();
-				toDoAttribute = "Description";
-
-				try {
-					SendMessage messageToTelegram = new SendMessage();
-					messageToTelegram.setChatId(chatId);
-					messageToTelegram.setText("Se han reseteado el registro de Task. Adding Task: " + String.valueOf(addingToDo) + " Todo Attribute: " + toDoAttribute);
-					// send message
-					execute(messageToTelegram);
-
-				} catch (Exception e) {
 					logger.error(e.getLocalizedMessage(), e);
 				}
 				
@@ -417,22 +313,110 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				}
 			
 				// AGREGAR NUEVO ITEM
-			} else if (messageTextFromTelegram.equals(BotCommands.ADD_ITEM.getCommand())
+			} else if (addingToDo == true
+					|| messageTextFromTelegram.equals(BotCommands.ADD_ITEM.getCommand())
 					|| messageTextFromTelegram.equals(BotLabels.ADD_NEW_ITEM.getLabel())) {
 				
-				
-				try {
-					SendMessage messageToTelegram = new SendMessage();
-					messageToTelegram.setChatId(chatId);
-					messageToTelegram.setText("Introduce el título del ToDo:");
-					// send message
-					execute(messageToTelegram);
+				if (toDoAttribute.equals("Description")) {
+					try {
+						SendMessage messageToTelegram = new SendMessage();
+						messageToTelegram.setChatId(chatId);
+						messageToTelegram.setText("Introduce el título del ToDo:");
+						// send message
+						execute(messageToTelegram);
+	
+					} catch (Exception e) {
+						logger.error(e.getLocalizedMessage(), e);
+					}
+					
+					toDoAttribute = "Details";
 
-				} catch (Exception e) {
-					logger.error(e.getLocalizedMessage(), e);
+				} else if (toDoAttribute.equals("Details")) {
+
+					dummyToDoItem.setDescription(messageTextFromTelegram);
+					
+					try {
+						SendMessage messageToTelegram = new SendMessage();
+						messageToTelegram.setChatId(chatId);
+						messageToTelegram.setText("Dale una descriptión al ToDo:");
+						// send message
+						execute(messageToTelegram);
+	
+					} catch (Exception e) {
+						logger.error(e.getLocalizedMessage(), e);
+					}
+
+					toDoAttribute = "Priority";
+
+				} else if (toDoAttribute.equals("Priority")) {
+
+					dummyToDoItem.setDetails(messageTextFromTelegram);
+
+					try {
+						SendMessage messageToTelegram = new SendMessage();
+						messageToTelegram.setChatId(chatId);
+						messageToTelegram.setText("¿Qué prioridad tiene? \n (asignala con un numero) 🟥: 1, 🟧: 2, 🟨: 3");
+						// send message
+						execute(messageToTelegram);
+	
+					} catch (Exception e) {
+						logger.error(e.getLocalizedMessage(), e);
+					}
+
+					toDoAttribute = "Complexity";
+
+				} else if (toDoAttribute.equals("Complexity")) {
+
+					dummyToDoItem.setPriority(Integer.valueOf(messageTextFromTelegram));
+
+					try {
+						SendMessage messageToTelegram = new SendMessage();
+						messageToTelegram.setChatId(chatId);
+						messageToTelegram.setText("¿Qué complejidad tiene? \n (asignala con un numero) 😎: 1, 🤨: 2, 😰: 3");
+						// send message
+						execute(messageToTelegram);
+	
+					} catch (Exception e) {
+						logger.error(e.getLocalizedMessage(), e);
+					}
+
+					toDoAttribute = "Final";
+
+				} else if (toDoAttribute.equals("Final")) {
+
+					dummyToDoItem.setComplexity(Integer.valueOf(messageTextFromTelegram));
+					//agregar todo a bd
+					dummyToDoItem.setCreation_ts(OffsetDateTime.now());
+					dummyToDoItem.setDone(false);
+					dummyToDoItem.setIdAssignee(String.valueOf(user_id));
+
+					//Agregamos los atributos automaticos 
+					dummyToDoItem.setEpic(0); // pendiente - agregar proceso para elegirlo 
+					dummyToDoItem.setSprint(0); // se agrega en automatico dependiendo de la semana 
+					dummyToDoItem.setProject(0); // se obtiene a traves del identificador del usuario 
+					
+					try {
+						ResponseEntity entity = addToDoItem(dummyToDoItem);
+					} catch (Exception e) {
+						logger.error(e.getLocalizedMessage(), e);
+					}
+					
+					// Reseteo de las variables de control
+					addingToDo = false;
+					dummyToDoItem = new ToDoItem();
+					toDoAttribute = "Description";
+
+					try {
+						SendMessage messageToTelegram = new SendMessage();
+						messageToTelegram.setChatId(chatId);
+						messageToTelegram.setText(BotMessages.NEW_ITEM_ADDED.getMessage());
+						// send message
+						execute(messageToTelegram);
+	
+					} catch (Exception e) {
+						logger.error(e.getLocalizedMessage(), e);
+					}
 				}
-				
-				toDoAttribute = "Details";
 			}
 
 			else {
