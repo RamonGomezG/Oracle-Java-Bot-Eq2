@@ -2,7 +2,9 @@ package com.springboot.MyTodoList.controller;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Priorities;
@@ -23,6 +25,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.springboot.MyTodoList.model.ToDoItem;
+import com.springboot.MyTodoList.model.UserState;
 import com.springboot.MyTodoList.service.ToDoItemService;
 import com.springboot.MyTodoList.util.BotCommands;
 import com.springboot.MyTodoList.util.BotHelper;
@@ -34,9 +37,11 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 	private static final Logger logger = LoggerFactory.getLogger(ToDoItemBotController.class);
 	private ToDoItemService toDoItemService;
 	private String botName;
-	private int toDoAttribute;
-	private Boolean addingToDo;
-	private ToDoItem dummyToDoItem; 
+	private Map<Long, UserState> userStates = new HashMap<>();
+
+	// private int toDoAttribute;
+	// private Boolean addingToDo;
+	// private ToDoItem dummyToDoItem; 
 
 	public ToDoItemBotController(String botToken, String botName, ToDoItemService toDoItemService) {
 		super(botToken);
@@ -44,9 +49,9 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 		logger.info("Bot name: " + botName);
 		this.toDoItemService = toDoItemService;
 		this.botName = botName;
-		this.toDoAttribute = 0;
-		this.addingToDo = false;
-		this.dummyToDoItem = new ToDoItem();
+		// this.toDoAttribute = 0;
+		// this.addingToDo = false;
+		// this.dummyToDoItem = new ToDoItem();
 	}
 
 	@Override
@@ -57,11 +62,14 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			String messageTextFromTelegram = update.getMessage().getText();
 			long chatId = update.getMessage().getChatId();
 			long user_id = update.getMessage().getChat().getId();
+			UserState userState = userStates.getOrDefault(chatId, new UserState());
 
-			if (addingToDo == true) {
-				switch (toDoAttribute) {
+			if (userState.isAddingToDo() == true && !messageTextFromTelegram.equals("/reset")) {
+				ToDoItem dummyToDoItem = userState.getItem();
+				switch (userState.getStep()) {
 					case 1: 
 						dummyToDoItem.setDescription(messageTextFromTelegram);
+						userState.setItem(dummyToDoItem);
 						
 						try {
 							SendMessage messageToTelegram = new SendMessage();
@@ -74,13 +82,13 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 							logger.error(e.getLocalizedMessage(), e);
 						}
 	
-						toDoAttribute = 2;
+						userState.setStep(2);
 
 						break;
 	
 					case 2: 
-	
 						dummyToDoItem.setDetails(messageTextFromTelegram);
+						userState.setItem(dummyToDoItem);
 	
 						try {
 							SendMessage messageToTelegram = new SendMessage();
@@ -93,12 +101,12 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 							logger.error(e.getLocalizedMessage(), e);
 						}
 	
-						toDoAttribute = 3;
+						userState.setStep(3);
 	
 					case 3:
-	
 						dummyToDoItem.setPriority(Integer.valueOf(messageTextFromTelegram));
-	
+						userState.setItem(dummyToDoItem);
+						
 						try {
 							SendMessage messageToTelegram = new SendMessage();
 							messageToTelegram.setChatId(chatId);
@@ -110,7 +118,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 							logger.error(e.getLocalizedMessage(), e);
 						}
 	
-						toDoAttribute = 4;
+						userState.setStep(4); 
 						break;
 
 					case 4: 
@@ -119,22 +127,22 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						dummyToDoItem.setCreation_ts(OffsetDateTime.now());
 						dummyToDoItem.setDone(false);
 						dummyToDoItem.setIdAssignee(String.valueOf(user_id));
-	
+
 						//Agregamos los atributos automaticos 
 						dummyToDoItem.setEpic(0); // pendiente - agregar proceso para elegirlo 
 						dummyToDoItem.setSprint(0); // se agrega en automatico dependiendo de la semana 
 						dummyToDoItem.setProject(0); // se obtiene a traves del identificador del usuario 
-						
+						userState.setItem(dummyToDoItem);
 						try {
-							ResponseEntity entity = addToDoItem(dummyToDoItem);
+							ResponseEntity entity = addToDoItem(userState.getItem());
 						} catch (Exception e) {
 							logger.error(e.getLocalizedMessage(), e);
 						}
 						
 						// Reseteo de las variables de control
-						addingToDo = false;
-						dummyToDoItem = new ToDoItem();
-						toDoAttribute = 0;
+						userState.setAddingtoDo(false);
+						userState.setItem(new ToDoItem());
+						userState.setStep(0);
 	
 						try {
 							SendMessage messageToTelegram = new SendMessage();
@@ -187,14 +195,14 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 			} else if (messageTextFromTelegram.equals("/reset")) {
 				// Reseteo de las variables de control
-				addingToDo = false;
-				dummyToDoItem = new ToDoItem();
-				toDoAttribute = 0;
+				userState.setAddingtoDo(false);
+				userState.setItem(new ToDoItem());
+				userState.setStep(0);
 
 				try {
 					SendMessage messageToTelegram = new SendMessage();
 					messageToTelegram.setChatId(chatId);
-					messageToTelegram.setText("Se han reseteado el registro de Task. Adding Task: " + String.valueOf(addingToDo) + " Todo Attribute: " + toDoAttribute);
+					messageToTelegram.setText("Se han reseteado el registro de Task. Adding Task: " + String.valueOf(userState.isAddingToDo()) + " Todo Attribute: " + userState.getStep());
 					// send message
 					execute(messageToTelegram);
 
@@ -329,6 +337,15 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				//AGREGAR SEGREGACION
 				List<ToDoItem> allItems = getAllToDoItems();
 
+				SendMessage messageToTelegramB = new SendMessage();
+				messageToTelegramB.setChatId(chatId);
+				messageToTelegramB.setText("Se han obtenido todas las tasks.");
+				try {
+					execute(messageToTelegramB);
+				} catch (TelegramApiException e) {
+					logger.error(e.getLocalizedMessage(), e);
+				}
+
 				ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
 				List<KeyboardRow> keyboard = new ArrayList<>();
 
@@ -347,6 +364,13 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 				List<ToDoItem> activeItems = allItems.stream().filter(item -> item.isDone() == false && (String.valueOf(user_id).equals(item.getIdAssignee())))
 						.collect(Collectors.toList());
+
+				messageToTelegramB.setText("Se filtraron las tasks activas.");
+				try {
+					execute(messageToTelegramB);
+				} catch (TelegramApiException e) {
+					logger.error(e.getLocalizedMessage(), e);
+				}
 
 				for (ToDoItem item : activeItems) {
 
@@ -377,6 +401,13 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				List<ToDoItem> doneItems = allItems.stream().filter(item -> item.isDone() == true && (String.valueOf(user_id).equals(item.getIdAssignee())))
 						.collect(Collectors.toList());
 
+				messageToTelegramB.setText("Se filtraron las tasks inactivas.");
+				try {
+					execute(messageToTelegramB);
+				} catch (TelegramApiException e) {
+					logger.error(e.getLocalizedMessage(), e);
+				}
+
 				for (ToDoItem item : doneItems) {
 					KeyboardRow currentRow = new KeyboardRow();
 					String prio = "";
@@ -400,6 +431,13 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UNDO.getLabel());
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DELETE.getLabel());
 					keyboard.add(currentRow);
+				}
+
+				messageToTelegramB.setText("Se mostraron las tasks.");
+				try {
+					execute(messageToTelegramB);
+				} catch (TelegramApiException e) {
+					logger.error(e.getLocalizedMessage(), e);
 				}
 
 				// command back to main screen
@@ -435,8 +473,8 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					logger.error(e.getLocalizedMessage(), e);
 				}
 				
-				toDoAttribute = 1;
-				addingToDo = true;
+				userState.setAddingtoDo(true); 
+				userState.setStep(1);
 			}
 
 			else {
