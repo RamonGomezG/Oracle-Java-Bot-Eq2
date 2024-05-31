@@ -433,6 +433,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				}
 				
 				toDoAttribute = "Details";
+				addingToDo = true;
 			}
 
 			else {
