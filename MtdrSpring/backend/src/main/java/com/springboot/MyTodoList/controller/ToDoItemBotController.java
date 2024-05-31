@@ -34,7 +34,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 	private static final Logger logger = LoggerFactory.getLogger(ToDoItemBotController.class);
 	private ToDoItemService toDoItemService;
 	private String botName;
-	private String toDoAttribute;
+	private int toDoAttribute;
 	private Boolean addingToDo;
 	private ToDoItem dummyToDoItem; 
 
@@ -44,7 +44,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 		logger.info("Bot name: " + botName);
 		this.toDoItemService = toDoItemService;
 		this.botName = botName;
-		this.toDoAttribute = "Description";
+		this.toDoAttribute = 0;
 		this.addingToDo = false;
 		this.dummyToDoItem = new ToDoItem();
 	}
@@ -59,94 +59,98 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			long user_id = update.getMessage().getChat().getId();
 
 			if (addingToDo == true) {
-				if (toDoAttribute.equals("Details")) {
-					dummyToDoItem.setDescription(messageTextFromTelegram);
+				switch (toDoAttribute) {
+					case 1: 
+						dummyToDoItem.setDescription(messageTextFromTelegram);
+						
+						try {
+							SendMessage messageToTelegram = new SendMessage();
+							messageToTelegram.setChatId(chatId);
+							messageToTelegram.setText("Dale una descriptión al ToDo:");
+							// send message
+							execute(messageToTelegram);
+		
+						} catch (Exception e) {
+							logger.error(e.getLocalizedMessage(), e);
+						}
+	
+						toDoAttribute = 1;
+
+						break;
+	
+					case 2: 
+	
+						dummyToDoItem.setDetails(messageTextFromTelegram);
+	
+						try {
+							SendMessage messageToTelegram = new SendMessage();
+							messageToTelegram.setChatId(chatId);
+							messageToTelegram.setText("¿Qué prioridad tiene? \n (asignala con un numero) 🟥: 1, 🟧: 2, 🟨: 3");
+							// send message
+							execute(messageToTelegram);
+		
+						} catch (Exception e) {
+							logger.error(e.getLocalizedMessage(), e);
+						}
+	
+						toDoAttribute = 2;
+	
+					case 3:
+	
+						dummyToDoItem.setPriority(Integer.valueOf(messageTextFromTelegram));
+	
+						try {
+							SendMessage messageToTelegram = new SendMessage();
+							messageToTelegram.setChatId(chatId);
+							messageToTelegram.setText("¿Qué complejidad tiene? \n (asignala con un numero) 😎: 1, 🤨: 2, 😰: 3");
+							// send message
+							execute(messageToTelegram);
+		
+						} catch (Exception e) {
+							logger.error(e.getLocalizedMessage(), e);
+						}
+	
+						toDoAttribute = 4;
+						break;
+
+					case 4: 
+						dummyToDoItem.setComplexity(Integer.valueOf(messageTextFromTelegram));
+						//agregar todo a bd
+						dummyToDoItem.setCreation_ts(OffsetDateTime.now());
+						dummyToDoItem.setDone(false);
+						dummyToDoItem.setIdAssignee(String.valueOf(user_id));
+	
+						//Agregamos los atributos automaticos 
+						dummyToDoItem.setEpic(0); // pendiente - agregar proceso para elegirlo 
+						dummyToDoItem.setSprint(0); // se agrega en automatico dependiendo de la semana 
+						dummyToDoItem.setProject(0); // se obtiene a traves del identificador del usuario 
+						
+						try {
+							ResponseEntity entity = addToDoItem(dummyToDoItem);
+						} catch (Exception e) {
+							logger.error(e.getLocalizedMessage(), e);
+						}
+						
+						// Reseteo de las variables de control
+						addingToDo = false;
+						dummyToDoItem = new ToDoItem();
+						toDoAttribute = 0;
+	
+						try {
+							SendMessage messageToTelegram = new SendMessage();
+							messageToTelegram.setChatId(chatId);
+							messageToTelegram.setText(BotMessages.NEW_ITEM_ADDED.getMessage());
+							// send message
+							execute(messageToTelegram);
+		
+						} catch (Exception e) {
+							logger.error(e.getLocalizedMessage(), e);
+						}
+						break;
+					}
 					
-					try {
-						SendMessage messageToTelegram = new SendMessage();
-						messageToTelegram.setChatId(chatId);
-						messageToTelegram.setText("Dale una descriptión al ToDo:");
-						// send message
-						execute(messageToTelegram);
-	
-					} catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
-
-					toDoAttribute = "Priority";
-
-				} else if (toDoAttribute.equals("Priority")) {
-
-					dummyToDoItem.setDetails(messageTextFromTelegram);
-
-					try {
-						SendMessage messageToTelegram = new SendMessage();
-						messageToTelegram.setChatId(chatId);
-						messageToTelegram.setText("¿Qué prioridad tiene? \n (asignala con un numero) 🟥: 1, 🟧: 2, 🟨: 3");
-						// send message
-						execute(messageToTelegram);
-	
-					} catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
-
-					toDoAttribute = "Complexity";
-
-				} else if (toDoAttribute.equals("Complexity")) {
-
-					dummyToDoItem.setPriority(Integer.valueOf(messageTextFromTelegram));
-
-					try {
-						SendMessage messageToTelegram = new SendMessage();
-						messageToTelegram.setChatId(chatId);
-						messageToTelegram.setText("¿Qué complejidad tiene? \n (asignala con un numero) 😎: 1, 🤨: 2, 😰: 3");
-						// send message
-						execute(messageToTelegram);
-	
-					} catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
-
-					toDoAttribute = "Final";
-
-				} else if (toDoAttribute.equals("Final")) {
-
-					dummyToDoItem.setComplexity(Integer.valueOf(messageTextFromTelegram));
-					//agregar todo a bd
-					dummyToDoItem.setCreation_ts(OffsetDateTime.now());
-					dummyToDoItem.setDone(false);
-					dummyToDoItem.setIdAssignee(String.valueOf(user_id));
-
-					//Agregamos los atributos automaticos 
-					dummyToDoItem.setEpic(0); // pendiente - agregar proceso para elegirlo 
-					dummyToDoItem.setSprint(0); // se agrega en automatico dependiendo de la semana 
-					dummyToDoItem.setProject(0); // se obtiene a traves del identificador del usuario 
-					
-					try {
-						ResponseEntity entity = addToDoItem(dummyToDoItem);
-					} catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
-					
-					// Reseteo de las variables de control
-					addingToDo = false;
-					dummyToDoItem = new ToDoItem();
-					toDoAttribute = "Description";
-
-					try {
-						SendMessage messageToTelegram = new SendMessage();
-						messageToTelegram.setChatId(chatId);
-						messageToTelegram.setText(BotMessages.NEW_ITEM_ADDED.getMessage());
-						// send message
-						execute(messageToTelegram);
-	
-					} catch (Exception e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
-				}
-				
-			} else if (messageTextFromTelegram.equals(BotCommands.START_COMMAND.getCommand())
-					|| messageTextFromTelegram.equals(BotLabels.SHOW_MAIN_SCREEN.getLabel())) {
+				} else if (messageTextFromTelegram.equals(BotCommands.START_COMMAND.getCommand())
+				|| messageTextFromTelegram.equals(BotLabels.SHOW_MAIN_SCREEN.getLabel())) {
 
 				SendMessage messageToTelegram = new SendMessage();
 				messageToTelegram.setChatId(chatId);
@@ -185,7 +189,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				// Reseteo de las variables de control
 				addingToDo = false;
 				dummyToDoItem = new ToDoItem();
-				toDoAttribute = "Description";
+				toDoAttribute = 0;
 
 				try {
 					SendMessage messageToTelegram = new SendMessage();
@@ -420,7 +424,6 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			} else if (messageTextFromTelegram.equals(BotCommands.ADD_ITEM.getCommand())
 					|| messageTextFromTelegram.equals(BotLabels.ADD_NEW_ITEM.getLabel())) {
 				
-				
 				try {
 					SendMessage messageToTelegram = new SendMessage();
 					messageToTelegram.setChatId(chatId);
@@ -432,7 +435,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					logger.error(e.getLocalizedMessage(), e);
 				}
 				
-				toDoAttribute = "Details";
+				toDoAttribute = 1;
 				addingToDo = true;
 			}
 
