@@ -5,7 +5,6 @@ public class UserState {
     private int step;
     private boolean addingToDo; 
 
-
     public UserState() {
         this.item = new ToDoItem();
         this.step = 0;

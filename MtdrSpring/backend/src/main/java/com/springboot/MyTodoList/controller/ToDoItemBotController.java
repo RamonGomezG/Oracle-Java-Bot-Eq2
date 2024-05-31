@@ -489,6 +489,8 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					logger.error(e.getLocalizedMessage(), e);
 				}
 			}
+
+			userStates.put(chatId, userState);
 		}
 	}
 
