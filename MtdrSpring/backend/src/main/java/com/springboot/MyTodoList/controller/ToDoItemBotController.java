@@ -66,7 +66,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						try {
 							SendMessage messageToTelegram = new SendMessage();
 							messageToTelegram.setChatId(chatId);
-							messageToTelegram.setText("Dale una descriptión al ToDo:");
+							messageToTelegram.setText("Dale una descripción al ToDo:");
 							// send message
 							execute(messageToTelegram);
 		
@@ -74,7 +74,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 							logger.error(e.getLocalizedMessage(), e);
 						}
 	
-						toDoAttribute = 1;
+						toDoAttribute = 2;
 
 						break;
 	
@@ -93,7 +93,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 							logger.error(e.getLocalizedMessage(), e);
 						}
 	
-						toDoAttribute = 2;
+						toDoAttribute = 3;
 	
 					case 3:
 	
