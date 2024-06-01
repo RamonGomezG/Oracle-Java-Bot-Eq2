@@ -337,15 +337,6 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				//AGREGAR SEGREGACION
 				List<ToDoItem> allItems = getAllToDoItems();
 
-				SendMessage messageToTelegramB = new SendMessage();
-				messageToTelegramB.setChatId(chatId);
-				messageToTelegramB.setText("Se han obtenido todas las tasks.");
-				try {
-					execute(messageToTelegramB);
-				} catch (TelegramApiException e) {
-					logger.error(e.getLocalizedMessage(), e);
-				}
-
 				ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
 				List<KeyboardRow> keyboard = new ArrayList<>();
 
@@ -364,13 +355,6 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 				List<ToDoItem> activeItems = allItems.stream().filter(item -> item.isDone() == false && (String.valueOf(user_id).equals(item.getIdAssignee())))
 						.collect(Collectors.toList());
-
-				messageToTelegramB.setText("Se filtraron las tasks activas.");
-				try {
-					execute(messageToTelegramB);
-				} catch (TelegramApiException e) {
-					logger.error(e.getLocalizedMessage(), e);
-				}
 
 				for (ToDoItem item : activeItems) {
 
@@ -401,13 +385,6 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				List<ToDoItem> doneItems = allItems.stream().filter(item -> item.isDone() == true && (String.valueOf(user_id).equals(item.getIdAssignee())))
 						.collect(Collectors.toList());
 
-				messageToTelegramB.setText("Se filtraron las tasks inactivas.");
-				try {
-					execute(messageToTelegramB);
-				} catch (TelegramApiException e) {
-					logger.error(e.getLocalizedMessage(), e);
-				}
-
 				for (ToDoItem item : doneItems) {
 					KeyboardRow currentRow = new KeyboardRow();
 					String prio = "";
@@ -431,13 +408,6 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UNDO.getLabel());
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DELETE.getLabel());
 					keyboard.add(currentRow);
-				}
-
-				messageToTelegramB.setText("Se mostraron las tasks.");
-				try {
-					execute(messageToTelegramB);
-				} catch (TelegramApiException e) {
-					logger.error(e.getLocalizedMessage(), e);
 				}
 
 				// command back to main screen
