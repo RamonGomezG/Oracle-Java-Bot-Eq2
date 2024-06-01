@@ -1,27 +1,26 @@
-Change Log
-All notable changes to this project will be documented in this file.
+# Change Log
+Todos los cambios de este project se registrarán aqui.
+ 
+## [Unreleased] - 2024-05-31
+UPGRADES
+- Necesita reconocer que proyecto pertenece el usuario.
+- Necesita reconocer el rol del usuario.
+- Neceista poder editar los todo tasks item.
+- Necesita tener cada usuario su tabla.
 
-The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
+### Added
+- Se agrega un file de RELEASENOTES.md
+- Se agregao un file de CHANGELOG.md
+ 
+### Changed
+Se cambio la syntaxis que se necesitaba poner para agregar una new task. Antes se nececitaba poner un ";" para cambiar de seccion y ahora no se necesita hacer eso.
+# Issue Link
+- https://github.com/RamonGomezG/Oracle-Java-Bot-Eq2/commit/181c469294687014bce518061b522ad07c79bdf2
 
-[Unreleased] - yyyy-mm-dd
-Here we write upgrading notes for brands. It's a team effort to make them as straightforward as possible.
 
-Added
-PROJECTNAME-XXXX MINOR Ticket title goes here.
-PROJECTNAME-YYYY PATCH Ticket title goes here.
-Changed
-Fixed
-[1.2.4] - 2017-03-15
-Here we would have the update steps for 1.2.4 for people to follow.
-
-Added
-Changed
-PROJECTNAME-ZZZZ PATCH Drupal.org is now used for composer.
-Fixed
-PROJECTNAME-TTTT PATCH Add logic to runsheet teaser delete to delete corresponding schedule cards.
-[1.2.3] - 2017-03-14
-Added
-Changed
-Fixed
-PROJECTNAME-UUUU MINOR Fix module foo tests
-PROJECTNAME-RRRR MAJOR Module foo's timeline uses the browser timezone for date resolution
+### Fixed
+ Ya pueden haber más de un usuario utilizando el chatbot al mismo tiempo y se guardan los respectivos task para cada usuario.
+## Issue Link
+ - https://github.com/RamonGomezG/Oracle-Java-Bot-Eq2/commit/181c469294687014bce518061b522ad07c79bdf2
+## [1.2.4] - 2024-05-31
+  
