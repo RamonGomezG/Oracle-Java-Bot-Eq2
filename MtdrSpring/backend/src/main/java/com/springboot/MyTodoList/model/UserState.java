@@ -3,12 +3,16 @@ package com.springboot.MyTodoList.model;
 public class UserState {
     private ToDoItem item;
     private int step;
-    private boolean addingToDo; 
+    private boolean addingTask; 
+    private boolean edittingTask;
+    public int changedAttribute;
 
     public UserState() {
         this.item = new ToDoItem();
         this.step = 0;
-        this.addingToDo = false;
+        this.addingTask = false;
+        this.edittingTask = false;
+        this.changedAttribute = 0;
     }
 
     public ToDoItem getItem() {
@@ -27,12 +31,20 @@ public class UserState {
         this.step = step;
     }
 
-    public boolean isAddingToDo(){
-        return this.addingToDo;
+    public boolean isAddingTask(){
+        return this.addingTask;
     }
 
-    public void setAddingtoDo(Boolean addingToDo) {
-        this.addingToDo = addingToDo;
+    public void setAddingTask(Boolean addingTask) {
+        this.addingTask = addingTask;
+    }
+
+    public boolean isEdittingTask() {
+        return this.edittingTask;
+    }
+
+    public void setEdittingTask(Boolean edittingTask) {
+        this.edittingTask = edittingTask;
     }
 
 }

@@ -64,7 +64,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			long user_id = update.getMessage().getChat().getId();
 			UserState userState = userStates.getOrDefault(chatId, new UserState());
 
-			if (userState.isAddingToDo() == true && !messageTextFromTelegram.equals("/reset")) {
+			if (userState.isAddingTask() == true && !messageTextFromTelegram.equals("/reset")) {
 				ToDoItem dummyToDoItem = userState.getItem();
 				switch (userState.getStep()) {
 					case 1: 
@@ -74,7 +74,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						try {
 							SendMessage messageToTelegram = new SendMessage();
 							messageToTelegram.setChatId(chatId);
-							messageToTelegram.setText("Dale una descripción al ToDo:");
+							messageToTelegram.setText("Dale una descripción a la Task:");
 							// send message
 							execute(messageToTelegram);
 		
@@ -140,7 +140,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						}
 						
 						// Reseteo de las variables de control
-						userState.setAddingtoDo(false);
+						userState.setAddingTask(false);
 						userState.setItem(new ToDoItem());
 						userState.setStep(0);
 	
@@ -157,6 +157,134 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						break;
 					}
 					
+				} else if (userState.isEdittingTask() == true && !messageTextFromTelegram.equals("/reset")) {
+					ToDoItem dummyToDoItem = userState.getItem();
+					switch (userState.getStep()) {
+						case 0: 
+							try {
+								SendMessage messageToTelegram = new SendMessage();
+								messageToTelegram.setChatId(chatId);
+								messageToTelegram.setText("¿Qué atributo de la Task quieres editar? \n1: Título \n 2: Descripción \n3: Prioridad \n 4: Complejidad");
+								// send message
+								execute(messageToTelegram);
+			
+							} catch (Exception e) {
+								logger.error(e.getLocalizedMessage(), e);
+							}
+							userState.setStep(6);
+							break;
+						case 1: 
+							dummyToDoItem.setDescription(messageTextFromTelegram);
+							userState.setItem(dummyToDoItem);
+							
+							try {
+								updateToDoItem(userState.getItem(), userState.getItem().getID());
+								SendMessage messageToTelegram = new SendMessage();
+								messageToTelegram.setChatId(chatId);
+								messageToTelegram.setText("Título actualizado!");
+								// send message
+								execute(messageToTelegram);
+			
+							} catch (Exception e) {
+								logger.error(e.getLocalizedMessage(), e);
+							}
+
+							//Resetear variables
+							// Reseteo de las variables de control
+							userState.setEdittingTask(false);
+							userState.setItem(new ToDoItem());
+							userState.changedAttribute = 0;
+							userState.setStep(0);
+	
+							break;
+		
+						case 2: 
+							dummyToDoItem.setDetails(messageTextFromTelegram);
+							userState.setItem(dummyToDoItem);
+							updateToDoItem(userState.getItem(), userState.getItem().getID());
+		
+							try {
+								SendMessage messageToTelegram = new SendMessage();
+								messageToTelegram.setChatId(chatId);
+								messageToTelegram.setText("Decripción actualizada!");
+								// send message
+								execute(messageToTelegram);
+			
+							} catch (Exception e) {
+								logger.error(e.getLocalizedMessage(), e);
+							}
+		
+							userState.setEdittingTask(false);
+							userState.setItem(new ToDoItem());
+							userState.changedAttribute = 0;
+							userState.setStep(0);
+							break;
+		
+						case 3:
+							dummyToDoItem.setPriority(Integer.valueOf(messageTextFromTelegram));
+							userState.setItem(dummyToDoItem);
+							updateToDoItem(userState.getItem(), userState.getItem().getID());
+							
+							try {
+								SendMessage messageToTelegram = new SendMessage();
+								messageToTelegram.setChatId(chatId);
+								messageToTelegram.setText("Prioridad actualizada!");
+								// send message
+								execute(messageToTelegram);
+			
+							} catch (Exception e) {
+								logger.error(e.getLocalizedMessage(), e);
+							}
+		
+							userState.setEdittingTask(false);
+							userState.setItem(new ToDoItem());
+							userState.changedAttribute = 0;
+							userState.setStep(0);
+							break;
+	
+						case 4: 
+							dummyToDoItem.setComplexity(Integer.valueOf(messageTextFromTelegram));
+							userState.setItem(dummyToDoItem);
+							updateToDoItem(userState.getItem(), userState.getItem().getID());
+							
+							// Reseteo de las variables de control
+							userState.setEdittingTask(false);
+							userState.setItem(new ToDoItem());
+							userState.setStep(0);
+		
+							try {
+								SendMessage messageToTelegram = new SendMessage();
+								messageToTelegram.setChatId(chatId);
+								messageToTelegram.setText("Complejidad Actualizada!");
+								// send message
+								execute(messageToTelegram);
+			
+							} catch (Exception e) {
+								logger.error(e.getLocalizedMessage(), e);
+							}
+
+							userState.setEdittingTask(false);
+							userState.setItem(new ToDoItem());
+							userState.changedAttribute = 0;
+							userState.setStep(0);
+
+							break;
+						
+						case 6: 
+							userState.setStep(Integer.valueOf(messageTextFromTelegram));
+							try {
+								SendMessage messageToTelegram = new SendMessage();
+								messageToTelegram.setChatId(chatId);
+								messageToTelegram.setText("¿Cual será el nuevo valor del atributo? \n Recuerda: Complejidad y prioridad (1, 2, 3)");
+								// send message
+								execute(messageToTelegram);
+			
+							} catch (Exception e) {
+								logger.error(e.getLocalizedMessage(), e);
+							}
+							break;
+					}
+						
 				} else if (messageTextFromTelegram.equals(BotCommands.START_COMMAND.getCommand())
 				|| messageTextFromTelegram.equals(BotLabels.SHOW_MAIN_SCREEN.getLabel())) {
 
@@ -195,14 +323,14 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 			} else if (messageTextFromTelegram.equals("/reset")) {
 				// Reseteo de las variables de control
-				userState.setAddingtoDo(false);
+				userState.setAddingTask(false);
 				userState.setItem(new ToDoItem());
 				userState.setStep(0);
 
 				try {
 					SendMessage messageToTelegram = new SendMessage();
 					messageToTelegram.setChatId(chatId);
-					messageToTelegram.setText("Se han reseteado el registro de Task. Adding Task: " + String.valueOf(userState.isAddingToDo()) + " Todo Attribute: " + userState.getStep());
+					messageToTelegram.setText("Se han reseteado el registro de Task. Adding Task: " + String.valueOf(userState.isAddingTask()) + " Todo Attribute: " + userState.getStep());
 					// send message
 					execute(messageToTelegram);
 
@@ -270,6 +398,27 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					ReplyKeyboardRemove keyboardMarkup = new ReplyKeyboardRemove(true);
 					messageToTelegram.setReplyMarkup(keyboardMarkup);
 					execute(messageToTelegram);
+
+				} catch (Exception e) {
+					logger.error(e.getLocalizedMessage(), e);
+				}
+			
+			//Editar item 
+			} else if (messageTextFromTelegram.indexOf("📝") != -1) {
+
+				String done = messageTextFromTelegram.substring(0,
+						messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()));
+
+				Integer id = Integer.valueOf(done);
+
+				try {
+
+					ToDoItem item = getToDoItemById(id).getBody();
+					BotHelper.sendMessageToTelegram(chatId, "Se ha editado la Task!", this);
+
+					userState.setEdittingTask(true); 
+					userState.setStep(0);
+					userState.setItem(item);
 
 				} catch (Exception e) {
 					logger.error(e.getLocalizedMessage(), e);
@@ -379,6 +528,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					// currentRow.add("Prioridad: " + prio + ", Complejidad: " + comp);
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp);
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
+					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + "📝");
 					keyboard.add(currentRow);
 				}
 
@@ -443,7 +593,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					logger.error(e.getLocalizedMessage(), e);
 				}
 				
-				userState.setAddingtoDo(true); 
+				userState.setAddingTask(true); 
 				userState.setStep(1);
 			}
 
