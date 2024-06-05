@@ -24,14 +24,6 @@ steps:
     command: (echo $JAVA_HOME)
 
   - type: Command
-    name: which
-    command: which mvn
-
-  - type: Command
-    name: package
-    command: (source MtdrSpring/env.sh;cd backend;mvn package)
-
-  - type: Command
     name: compile
     command: (source MtdrSpring/env.sh;cd backend;source build.sh)
 
