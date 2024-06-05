@@ -20,12 +20,8 @@ steps:
     command: export PATH=$JAVA_HOME/bin:$PATH
 
   - type: Command
-    name: run-envsh
-    command: source env.sh
-
-  - type: Command
-    name: run-buildsh
-    command: source build.sh
+    name: run-envsh-buildsh
+    command: (source MtdrSpring/env.sh;source MtdrSpring/backend/build.sh)
 
   - type: Command
     name: check
