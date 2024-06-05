@@ -21,15 +21,15 @@ steps:
 
   - type: Command
     name: test01
-    command: pwd
+    command: (echo "Vars: $JAVA_HOME")
 
   - type: Command
     name: test02
-    command: ls
+    command: source MtdrSpring/env.sh
 
   - type: Command
     name: compile
-    command: (source MtdrSpring/env.sh;source backend/build.sh)
+    command: (source MtdrSpring/env.sh;cd backend; source backend/build.sh)
 
   - type: Command
     name: test
