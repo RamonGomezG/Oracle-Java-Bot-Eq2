@@ -18,7 +18,8 @@ export IMAGE=${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
 echo "pwd: $(pwd)"
 echo "JAVA: $JAVA_HOME"
 echo "jarfile: $(ls -la target)"
-echo "mvn: $(mvn clean package spring-boot:repackage)"
+echo "mvn: $(mvn package)"
+# echo "mvn: $(mvn clean package spring-boot:repackage)"
 
 
 docker build -f Dockerfile -t $IMAGE --platform=linux/arm64 .
