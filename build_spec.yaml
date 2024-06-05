@@ -24,33 +24,17 @@ steps:
     command: (echo $JAVA_HOME)
 
   - type: Command
-    name: test02
-    command: source MtdrSpring/env.sh
-
-  - type: Command
-    name: pwd
-    command: pwd
-
-  - type: Command
-    name: cd backend
-    command: cd backend
-
-  - type: Command
     name: which
     command: which mvn
 
   - type: Command
     name: package
-    command: mvn package
+    command: (source MtdrSpring/env.sh;cd backend;mvn package)
 
   - type: Command
     name: compile
-    command: (source MtdrSpring/env.sh;cd backend; source build.sh)
-
-  - type: Command
-    name: test
-    command: ls MtdrSpring/backend/
+    command: (source MtdrSpring/env.sh;cd backend;source build.sh)
 
   - type: Command
     name: test2
-    command: ls MtdrSpring
+    command: ls MtdrSpring/backend
