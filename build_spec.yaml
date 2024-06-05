@@ -29,7 +29,7 @@ steps:
 
   - type: Command
     name: compile
-    command: (source MtdrSpring/env.sh;source MtdrSpring/backend/build.sh)
+    command: (source MtdrSpring/env.sh;source backend/build.sh)
 
   - type: Command
     name: test
