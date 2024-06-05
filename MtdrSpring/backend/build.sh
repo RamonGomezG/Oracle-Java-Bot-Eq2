@@ -16,6 +16,9 @@ fi
 export IMAGE=${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
 
 mvn clean package spring-boot:repackage
+echo "JAVA: $JAVA_HOME"
+echo "jarfile: "
+ls -la target
 docker build -f Dockerfile -t $IMAGE .
 
 docker push $IMAGE
