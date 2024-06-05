@@ -15,11 +15,12 @@ if [ -z "$DOCKER_REGISTRY" ]; then
 fi
 export IMAGE=${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
 
+echo "which mvn: $(which mvn)"
 echo "pwd: $(pwd)"
 echo "JAVA: $JAVA_HOME"
-echo "jarfile: $(ls -la target)"
 echo "mvn: $(mvn package)"
 # echo "mvn: $(mvn clean package spring-boot:repackage)"
+echo "jarfile: $(ls -la target)"
 
 
 docker build -f Dockerfile -t $IMAGE --platform=linux/arm64 .
