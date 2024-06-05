@@ -15,9 +15,10 @@ if [ -z "$DOCKER_REGISTRY" ]; then
 fi
 export IMAGE=${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
 
-mvn clean package spring-boot:repackage
 echo "JAVA: $JAVA_HOME"
 echo "jarfile: $(ls -la target)"
+echo "$(mvn clean package spring-boot:repackage)"
+
 
 docker build -f Dockerfile -t $IMAGE .
 
