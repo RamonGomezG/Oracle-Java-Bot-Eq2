@@ -20,25 +20,21 @@ steps:
     command: export PATH=$JAVA_HOME/bin:$PATH
 
   - type: Command
-    name: run-envsh-buildsh
+    name: test01
+    command: pwd
+
+  - type: Command
+    name: test02
+    command: ls
+
+  - type: Command
+    name: compile
     command: (source MtdrSpring/env.sh;source MtdrSpring/backend/build.sh)
 
   - type: Command
-    name: check
-    command: ls -la target/
+    name: test
+    command: ls MtdrSpring/backend/
 
   - type: Command
-    name: Dockerize
-    command: |
-      BuildServiceDemoVersion=`echo ${OCI_BUILD_RUN_ID} | rev | cut -c 1-7`
-      echo $BuildServiceDemoVersion
-      docker build -f Dockerfile -t chatbote6 .
-
-  - type: Command
-    name: "List Docker Images"
-    command: docker images
-
-outputArtifacts:
-  - name: chatBotE6
-    type: DOCKER_IMAGE
-    location: chatbote6
+    name: test2
+    command: ls MtdrSpring
