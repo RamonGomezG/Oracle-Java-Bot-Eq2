@@ -1,0 +1,48 @@
+version: 0.1 
+component: build
+timeoutInSeconds: 100
+shell: bash
+
+env:
+  variables:
+    JAVA_HOME: /usr/lib64/graalvm/graalvm22-ee-java17
+
+  exportedVariables:
+    - BuildServiceDemoVersion
+
+steps:
+  - type: Command
+    name: "Install GraalVM Enterprise 22.x Native Image for Java17"
+    command: yum -y install graalvm22-ee-17-native-image
+
+  - type: Command
+    name: "Set PATH Variable"
+    command: export PATH=$JAVA_HOME/bin:$PATH
+
+  - type: Command
+    name: run-envsh
+    command: source env.sh
+
+  - type: Command
+    name: run-buildsh
+    command: source build.sh
+
+  - type: Command
+    name: check
+    command: ls -la target/
+
+  - type: Command
+    name: Dockerize
+    command: |
+      BuildServiceDemoVersion=`echo ${OCI_BUILD_RUN_ID} | rev | cut -c 1-7`
+      echo $BuildServiceDemoVersion
+      docker build -f Dockerfile -t chatbote6 .
+
+  - type: Command
+    name: "List Docker Images"
+    command: docker images
+
+outputArtifacts:
+  - name: chatBotE6
+    type: DOCKER_IMAGE
+    location: chatbote6
