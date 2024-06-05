@@ -21,7 +21,7 @@ steps:
 
   - type: Command
     name: test01
-    command: (echo "Vars: $JAVA_HOME")
+    command: (echo $JAVA_HOME)
 
   - type: Command
     name: test02
