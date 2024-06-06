@@ -14,6 +14,9 @@ function App() {
   function deleteItem(deleteId) {
     fetch(API_LIST + "/" + deleteId, {
       method: 'DELETE',
+      headers: {
+        'X-Frame-Options': 'DENY',
+      }
     })
     .then(response => {
       if (response.ok) {
@@ -24,7 +27,8 @@ function App() {
       }
     })
     .catch(error => {
-      setError(error);
+      console.error("Error deleting item:", error);
+      setError("Failed to delete item.");
     });
   }
 
@@ -36,7 +40,8 @@ function App() {
         setItems(updatedItems);
       },
       error => {
-        setError(error);
+        console.error("Error updating item:", error);
+        setError("Failed to update item.");
       }
     );
   }
@@ -46,7 +51,8 @@ function App() {
     return fetch(API_LIST + "/" + id, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-Frame-Options': 'DENY',
       },
       body: JSON.stringify(data)
     })
@@ -68,7 +74,8 @@ function App() {
     fetch(API_LIST, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-Frame-Options': 'DENY',
       },
       body: JSON.stringify(newItem),
     }).then(response => {
@@ -79,8 +86,9 @@ function App() {
         throw new Error('Something went wrong ...');
       }
     }).catch(error => {
+      console.error("Error adding item:", error);
       setInserting(false);
-      setError(error);
+      setError("Failed to add item.");
     });
   }
 
@@ -99,8 +107,9 @@ function App() {
       setItems(items);
     })
     .catch(error => {
+      console.error("Error fetching items:", error);
       setLoading(false);
-      setError(error);
+      setError("Failed to load items.");
     });
   }
 
