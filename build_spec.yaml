@@ -20,13 +20,5 @@ steps:
     command: export PATH=$JAVA_HOME/bin:$PATH
 
   - type: Command
-    name: test01
-    command: (echo $JAVA_HOME)
-
-  - type: Command
-    name: compile
+    name: compile-dockerize
     command: (source MtdrSpring/env.sh;cd backend;source build.sh)
-
-  - type: Command
-    name: test2
-    command: ls MtdrSpring/backend
