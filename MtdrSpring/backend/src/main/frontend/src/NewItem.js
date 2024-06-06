@@ -16,10 +16,11 @@ function NewItem(props) {
       [name]: name === "priority" || name === "complexity" ? parseInt(value) : value
     }));
   }
-
+  
   function handleSubmit(e) {
     e.preventDefault();
     if (!item.description.trim()) {
+      alert("Please provide a task description."); // Aviso al usuario si el campo está vacío
       return;
     }
     props.addItem(item);
