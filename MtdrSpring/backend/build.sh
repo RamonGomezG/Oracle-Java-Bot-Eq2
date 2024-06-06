@@ -23,8 +23,9 @@ echo "mvn: $(mvn clean package spring-boot:repackage)"
 echo "jarfile: $(ls -la target)"
 
 
-docker build -f Dockerfile -t $IMAGE --platform=linux/arm64 .
-
+docker build -f Dockerfile -t $IMAGE --platform=linux/arm64/v8 .
+#docker login
+echo "Z_PqK.S}890emo3OA#)y" | docker login -u "ax46bshgejdj/a01235962@tec.mx" --password-stdin "mx-queretaro-1.ocir.io"
 
 docker push $IMAGE
 if [  $? -eq 0 ]; then
