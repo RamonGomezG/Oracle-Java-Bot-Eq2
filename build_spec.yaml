@@ -20,5 +20,9 @@ steps:
     command: export PATH=$JAVA_HOME/bin:$PATH
 
   - type: Command
-    name: compile-dockerize
+    name: compile-dockerize-deliver
     command: (source MtdrSpring/env.sh;cd backend;source build.sh)
+
+  - type: Command
+    name: undeploy
+    command: (source MtdrSpring/backend/undeploy.sh)
