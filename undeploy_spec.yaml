@@ -12,10 +12,14 @@ steps:
       mkdir-p ~/.local/bin
       mv ./kubectl ~/.local/bin/kubectl
       export PATH=$PATH:~/.local/bin
-
+  
   - type: Command
-    name: Undeploy
-    command: |
-      echo delete frontend deployment and service...
-      kubectl -n mtdrworkshop delete deployment todolistapp-springboot-deployment
-      kubectl -n mtdrworkshop delete service todolistapp-springboot-service
+    name: Kubectl View Config
+    command: (kubectl config view)
+
+  # - type: Command
+  #   name: Undeploy
+  #   command: |
+  #     echo delete frontend deployment and service...
+  #     kubectl -n mtdrworkshop delete deployment todolistapp-springboot-deployment
+  #     kubectl -n mtdrworkshop delete service todolistapp-springboot-service
