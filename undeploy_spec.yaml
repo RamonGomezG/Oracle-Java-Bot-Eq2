@@ -15,7 +15,7 @@ steps:
   
   - type: Command
     name: Kubectl View Config
-    command: (kubectl config view)
+    command: (echo kubectl config view)
 
   # - type: Command
   #   name: Undeploy
