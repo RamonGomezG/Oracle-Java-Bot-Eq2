@@ -14,16 +14,11 @@ steps:
       export PATH=$PATH:~/.local/bin
   
   - type: Command
-    name: Check oci version
-    command: (oci -v)
-
-  - type: Command
-    name: Kubectl View Config
-    command: (~/.local/bin/kubectl config view)
-
-  # - type: Command
-  #   name: Undeploy
-  #   command: |
-  #     echo delete frontend deployment and service...
-  #     kubectl -n mtdrworkshop delete deployment todolistapp-springboot-deployment
-  #     kubectl -n mtdrworkshop delete service todolistapp-springboot-service
+    name: Create Kubecofig and Undeploy pods
+    command: |
+      mkdir -p ~/.kube
+      oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.oc1.mx-queretaro-1.aaaaaaaaq57ltg57dqtmfndpktkby7ltjbqegj6437pd3f65ecbbjujkudca --file ~/.kube/config --region mx-queretaro-1 --token-version 2.0.0  --kube-endpoint PUBLIC_ENDPOINT
+      oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.oc1.mx-queretaro-1.aaaaaaaaq57ltg57dqtmfndpktkby7ltjbqegj6437pd3f65ecbbjujkudca --file ~/.kube/config --region mx-queretaro-1 --token-version 2.0.0  --kube-endpoint PRIVATE_ENDPOINT
+      echo delete frontend deployment and service...
+      ~/.local/bin/kubectl -n mtdrworkshop delete deployment todolistapp-springboot-deployment
+      ~/.local/bin/kubectl -n mtdrworkshop delete service todolistapp-springboot-service
