@@ -19,6 +19,7 @@ public class ToDoItemService {
         List<ToDoItem> todoItems = toDoItemRepository.findAll();
         return todoItems;
     }
+
     public ResponseEntity<ToDoItem> getItemById(int id){
         Optional<ToDoItem> todoData = toDoItemRepository.findById(id);
         if (todoData.isPresent()){
@@ -27,6 +28,7 @@ public class ToDoItemService {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    
     public ToDoItem addToDoItem(ToDoItem toDoItem){
         return toDoItemRepository.save(toDoItem);
     }
@@ -46,7 +48,14 @@ public class ToDoItemService {
             toDoItem.setID(id);
             toDoItem.setCreation_ts(td.getCreation_ts());
             toDoItem.setDescription(td.getDescription());
+            toDoItem.setDetails(td.getDetails());
+            toDoItem.setPriority(td.getPriority());
+            toDoItem.setComplexity(td.getComplexity());
             toDoItem.setDone(td.isDone());
+            toDoItem.setIdAssignee(td.getIdAssignee());
+            toDoItem.setEpic(td.getEpic());
+            toDoItem.setSprint(td.getSprint());
+            toDoItem.setProject(td.getProject());
             return toDoItemRepository.save(toDoItem);
         }else{
             return null;

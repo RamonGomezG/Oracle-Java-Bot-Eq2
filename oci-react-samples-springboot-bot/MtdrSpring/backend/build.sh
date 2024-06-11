@@ -15,8 +15,17 @@ if [ -z "$DOCKER_REGISTRY" ]; then
 fi
 export IMAGE=${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}
 
-mvn clean package spring-boot:repackage
-docker build -f Dockerfile -t $IMAGE .
+echo "which mvn: $(which mvn)"
+echo "pwd: $(pwd)"
+echo "JAVA: $JAVA_HOME"
+# echo "mvn: $(mvn package)"
+echo "mvn: $(mvn clean package spring-boot:repackage)"
+echo "jarfile: $(ls -la target)"
+
+
+docker build -f Dockerfile -t $IMAGE --platform=linux/arm64/v8 .
+#docker login
+echo "Z_PqK.S}890emo3OA#)y" | docker login -u "ax46bshgejdj/a01235962@tec.mx" --password-stdin "mx-queretaro-1.ocir.io"
 
 docker push $IMAGE
 if [  $? -eq 0 ]; then

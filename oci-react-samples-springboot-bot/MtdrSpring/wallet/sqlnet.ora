@@ -1,0 +1,2 @@
+WALLET_LOCATION = (SOURCE = (METHOD = file) (METHOD_DATA = (DIRECTORY="/home/a01235962/reacttodo/Oracle-Java-Bot-Eq2/MtdrSpring/wallet")))
+SSL_SERVER_DN_MATCH=yes

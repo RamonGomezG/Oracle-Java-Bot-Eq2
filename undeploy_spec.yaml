@@ -1,0 +1,24 @@
+version: 0.1 
+component: build
+timeoutInSeconds: 1200
+shell: bash
+
+steps:
+  - type: Command
+    name: Download kubectl
+    command: |
+      curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      chmod +x kubectl
+      mkdir -p ~/.local/bin
+      mv ./kubectl ~/.local/bin/kubectl
+      export PATH=$PATH:~/.local/bin
+  
+  - type: Command
+    name: Create Kubecofig and Undeploy pods
+    command: |
+      mkdir -p ~/.kube
+      oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.oc1.mx-queretaro-1.aaaaaaaaq57ltg57dqtmfndpktkby7ltjbqegj6437pd3f65ecbbjujkudca --file ~/.kube/config --region mx-queretaro-1 --token-version 2.0.0  --kube-endpoint PUBLIC_ENDPOINT
+      oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.oc1.mx-queretaro-1.aaaaaaaaq57ltg57dqtmfndpktkby7ltjbqegj6437pd3f65ecbbjujkudca --file ~/.kube/config --region mx-queretaro-1 --token-version 2.0.0  --kube-endpoint PRIVATE_ENDPOINT
+      echo delete frontend deployment and service...
+      ~/.local/bin/kubectl -n mtdrworkshop delete deployment todolistapp-springboot-deployment
+      ~/.local/bin/kubectl -n mtdrworkshop delete service todolistapp-springboot-service
