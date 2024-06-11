@@ -74,30 +74,17 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			// if user is managager
 			if (user_id == 1076024199L) {
 				// ver task in progress 
-				if (messageTextFromTelegram.equals(BotCommands.TODO_LIST.getCommand())
-				|| messageTextFromTelegram.equals(BotLabels.LIST_ALL_ITEMS.getLabel())
-				|| messageTextFromTelegram.equals(BotLabels.MY_TODO_LIST.getLabel())){
+				if (messageTextFromTelegram.equals("/tasks")){
 
 					SendMessage messageToTelegram = new SendMessage();
 					messageToTelegram.setChatId(chatId);
 					messageToTelegram.setText("A continuación te muestro las Tasks de tu equipo de desarrollo.");
-
-					try {
-						execute(messageToTelegram);
-					} catch (TelegramApiException e) {
-						logger.error(e.getLocalizedMessage(), e);
-					}
 
 					//AGREGAR SEGREGACION
 					List<ToDoItem> allItems = getAllToDoItems();
 
 					ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
 					List<KeyboardRow> keyboard = new ArrayList<>();
-
-					// command back to main screen
-					KeyboardRow mainScreenRowTop = new KeyboardRow();
-					mainScreenRowTop.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
-					keyboard.add(mainScreenRowTop);
 
 					KeyboardRow myTodoListTitleRow = new KeyboardRow();
 					myTodoListTitleRow.add("Tasks de tu equipo");
@@ -144,14 +131,22 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						}	
 					}
 
-					// command back to main screen
 					KeyboardRow mainScreenRowBottom = new KeyboardRow();
 					mainScreenRowBottom.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
 					keyboard.add(mainScreenRowBottom);
-
 					keyboardMarkup.setKeyboard(keyboard);
+					
 					messageToTelegram.setReplyMarkup(keyboardMarkup);
-				} else if (messageTextFromTelegram.equals("/desarrolladores")) { 
+					messageToTelegram.setChatId(chatId);
+
+					try {
+						execute(messageToTelegram);
+					} catch (TelegramApiException e) {
+						logger.error(e.getLocalizedMessage(), e);
+					}
+					
+
+				} else if (messageTextFromTelegram.equals("/devs")) { 
 					ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
 					List<KeyboardRow> keyboard = new ArrayList<>();
 					SendMessage messageToTelegram = new SendMessage();
@@ -167,8 +162,16 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						currentRow.add(dev.getKey().toString() + " - " + dev.getValue());
 						keyboard.add(currentRow);
 					}
+
 					keyboardMarkup.setKeyboard(keyboard);
 					messageToTelegram.setReplyMarkup(keyboardMarkup);
+
+					try {
+						execute(messageToTelegram);
+					} catch (TelegramApiException e) {
+						logger.error(e.getLocalizedMessage(), e);
+					}
+
 				}else if (messageTextFromTelegram.indexOf(BotLabels.TODO_DETAILS.getLabel()) != -1) {
 				
 					String todoSelected = messageTextFromTelegram.substring(0,messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()));
@@ -236,7 +239,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					try {
 						SendMessage messageToTelegram = new SendMessage();
 						messageToTelegram.setChatId(chatId);
-						messageToTelegram.setText("Hola Manager! \nPara ver los tasks de tu equipo, usa el comando /tasks \nPara ver quienes conforman tu equipo, usa /desarrolladores");
+						messageToTelegram.setText("Hola Manager! \nPara ver los tasks de tu equipo, usa el comando /tasks \nPara ver quienes conforman tu equipo, usa /devs");
 						// send message
 						execute(messageToTelegram);
 	
