@@ -24,6 +24,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRem
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import com.springboot.MyTodoList.model.Developer;
 import com.springboot.MyTodoList.model.ToDoItem;
 import com.springboot.MyTodoList.model.UserState;
 import com.springboot.MyTodoList.service.ToDoItemService;
@@ -38,6 +39,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 	private ToDoItemService toDoItemService;
 	private String botName;
 	private Map<Long, UserState> userStates = new HashMap<>();
+	private Map<Long, String> devTeam = new HashMap<>();
 
 	// private int toDoAttribute;
 	// private Boolean addingToDo;
@@ -49,6 +51,11 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 		logger.info("Bot name: " + botName);
 		this.toDoItemService = toDoItemService;
 		this.botName = botName;
+		devTeam.put(6893855367L, "Luis Angel");
+        devTeam.put(6893855368L, "Kenyu Medina");
+        devTeam.put(6893855369L, "Aaron Inza");
+        devTeam.put(6893855370L, "Alexander Alexeiv");
+
 		// this.toDoAttribute = 0;
 		// this.addingToDo = false;
 		// this.dummyToDoItem = new ToDoItem();
@@ -64,7 +71,184 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			long user_id = update.getMessage().getChat().getId();
 			UserState userState = userStates.getOrDefault(chatId, new UserState());
 
-			if (userState.isAddingTask() == true && !messageTextFromTelegram.equals("/reset")) {
+			// if user is managager
+			if (user_id == 1076024199) {
+				// ver task in progress 
+				if (messageTextFromTelegram.equals(BotCommands.TODO_LIST.getCommand())
+				|| messageTextFromTelegram.equals(BotLabels.LIST_ALL_ITEMS.getLabel())
+				|| messageTextFromTelegram.equals(BotLabels.MY_TODO_LIST.getLabel())){
+
+					SendMessage messageToTelegram = new SendMessage();
+					messageToTelegram.setChatId(chatId);
+					messageToTelegram.setText("A continuación te muestro las Tasks de tu equipo de desarrollo.");
+
+					try {
+						execute(messageToTelegram);
+					} catch (TelegramApiException e) {
+						logger.error(e.getLocalizedMessage(), e);
+					}
+
+					//AGREGAR SEGREGACION
+					List<ToDoItem> allItems = getAllToDoItems();
+
+					ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+					List<KeyboardRow> keyboard = new ArrayList<>();
+
+					// command back to main screen
+					KeyboardRow mainScreenRowTop = new KeyboardRow();
+					mainScreenRowTop.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
+					keyboard.add(mainScreenRowTop);
+
+					KeyboardRow myTodoListTitleRow = new KeyboardRow();
+					myTodoListTitleRow.add("Tasks de tu equipo");
+					keyboard.add(myTodoListTitleRow);
+
+					List<ToDoItem> activeItems = allItems.stream().filter(item -> item.isDone() == false)
+							.collect(Collectors.toList());
+
+					KeyboardRow titlePending = new KeyboardRow();
+					titlePending.add("Tareas en progreso");
+					keyboard.add(titlePending);
+
+					for (Map.Entry<Long, String> dev : devTeam.entrySet()) {	
+						KeyboardRow currentRow = new KeyboardRow();
+						currentRow.add(dev.getKey().toString() + " - " + dev.getValue());
+						keyboard.add(currentRow);
+						for (ToDoItem item : activeItems) {
+							if (item.getIdAssignee().equals(dev.getKey())){
+								currentRow = new KeyboardRow();
+								currentRow.add(item.getIdAssignee());
+								currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription());
+								keyboard.add(currentRow);
+							}
+						}	
+					}
+
+					KeyboardRow titledone = new KeyboardRow();
+					titledone.add("Tareas completadas");
+					keyboard.add(titledone);
+
+					List<ToDoItem> doneItems = allItems.stream().filter(item -> item.isDone() == true)
+							.collect(Collectors.toList());
+
+					for (Map.Entry<Long, String> dev : devTeam.entrySet()) {	
+						KeyboardRow currentRow = new KeyboardRow();
+						currentRow.add(dev.getKey().toString() + " - " + dev.getValue());
+						keyboard.add(currentRow);
+						for (ToDoItem item : doneItems) {
+							if (item.getIdAssignee().equals(dev.getKey())){
+								currentRow = new KeyboardRow();
+								currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription());
+								keyboard.add(currentRow);
+							}
+						}	
+					}
+
+					// command back to main screen
+					KeyboardRow mainScreenRowBottom = new KeyboardRow();
+					mainScreenRowBottom.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
+					keyboard.add(mainScreenRowBottom);
+
+					keyboardMarkup.setKeyboard(keyboard);
+					messageToTelegram.setReplyMarkup(keyboardMarkup);
+				} else if (messageTextFromTelegram.equals("/desarrolladores")) { 
+					ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+					List<KeyboardRow> keyboard = new ArrayList<>();
+					SendMessage messageToTelegram = new SendMessage();
+					messageToTelegram.setChatId(chatId);
+
+					KeyboardRow mainScreenRowTop = new KeyboardRow();
+					mainScreenRowTop.add("Desarrolladores");
+					keyboard.add(mainScreenRowTop);
+
+					messageToTelegram.setText("A continuación te muestro a tu equipo de desarrollo.");
+					for (Map.Entry<Long, String> dev : devTeam.entrySet()) {
+						KeyboardRow currentRow = new KeyboardRow();
+						currentRow.add(dev.getKey().toString() + " - " + dev.getValue());
+						keyboard.add(currentRow);
+					}
+					keyboardMarkup.setKeyboard(keyboard);
+					messageToTelegram.setReplyMarkup(keyboardMarkup);
+				}else if (messageTextFromTelegram.indexOf(BotLabels.TODO_DETAILS.getLabel()) != -1) {
+				
+					String todoSelected = messageTextFromTelegram.substring(0,messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()));
+					Integer todoId = Integer.valueOf(todoSelected);
+	
+					try {
+	
+						ToDoItem item = getToDoItemById(todoId).getBody();
+	
+						String priority;
+						switch (item.getPriority()) {
+							case 1:
+								priority = "🟥 ALTA";
+								break;
+							case 2:
+								priority = "🟧 MEDIA";
+								break;
+							case 3:
+								priority = "🟨 BAJA";
+								break;
+							default:
+								priority = "INDEFINIDA";
+						}
+	
+						String complexity;
+						switch (item.getComplexity()) {
+							case 1:
+								complexity = "😎 BAJA";
+								break;
+							case 2:
+								complexity = "🤨 MEDIA";
+								break;
+							case 3:
+								complexity = "😨 ALTA";
+								break;
+							default:
+								complexity = "INDEFINIDA";
+						}
+	
+						String status; 
+						if (item.isDone()) {
+							status = "Completada ⛳️"; 
+						} else {
+							status = "En progreso 🛠️"; 
+						}
+	
+						SendMessage messageToTelegram1 = new SendMessage();
+						messageToTelegram1.setChatId(chatId);
+						messageToTelegram1.setText( "Claro! A continuación te muestro los detalles de tu task!");
+						ReplyKeyboardRemove keyboardMarkup1 = new ReplyKeyboardRemove(true);
+						messageToTelegram1.setReplyMarkup(keyboardMarkup1);
+						execute(messageToTelegram1);
+	
+						SendMessage messageToTelegram = new SendMessage();
+						messageToTelegram.setChatId(chatId);
+						messageToTelegram.setText( "Título: " + item.getDescription()+ ", " + "\nDescripción: " + " " + item.getDetails() + ", " + "\nPrioridad: " + priority + ", " + "\nComplejidad: " + complexity + ", " + " \nEstatus: " + status);
+						ReplyKeyboardRemove keyboardMarkup = new ReplyKeyboardRemove(true);
+						messageToTelegram.setReplyMarkup(keyboardMarkup);
+						execute(messageToTelegram);
+	
+					} catch (Exception e) {
+						logger.error(e.getLocalizedMessage(), e);
+					}
+				} else {
+					try {
+						SendMessage messageToTelegram = new SendMessage();
+						messageToTelegram.setChatId(chatId);
+						messageToTelegram.setText("Hola Manager! \nPara ver los tasks de tu equipo, usa el comando /tasks \nPara ver quienes conforman tu equipo, usa /desarrolladores");
+						// send message
+						execute(messageToTelegram);
+	
+					} catch (Exception e) {
+						logger.error(e.getLocalizedMessage(), e);
+					}
+				}
+				// usuario listado presionado 
+					//listar pendientes y en progreso 
+				// task listada presionada 
+					//mostrar detalles (reciclar codigo)
+			} else if (userState.isAddingTask() == true && !messageTextFromTelegram.equals("/reset")) {
 				ToDoItem dummyToDoItem = userState.getItem();
 				switch (userState.getStep()) {
 					case 1: 
