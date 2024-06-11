@@ -102,11 +102,10 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						currentRow.add(dev.getKey().toString() + " - " + dev.getValue());
 						keyboard.add(currentRow);
 						for (ToDoItem item : activeItems) {
-							if (item.getIdAssignee().equals(dev.getKey())){
-								currentRow = new KeyboardRow();
-								currentRow.add(item.getIdAssignee());
-								currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription());
-								keyboard.add(currentRow);
+							if (item.getIdAssignee().equals(String.valueOf(dev.getKey()))){
+								KeyboardRow currentRowTask = new KeyboardRow();
+								currentRowTask.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription());
+								keyboard.add(currentRowTask);
 							}
 						}	
 					}
@@ -123,21 +122,21 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						currentRow.add(dev.getKey().toString() + " - " + dev.getValue());
 						keyboard.add(currentRow);
 						for (ToDoItem item : doneItems) {
-							if (item.getIdAssignee().equals(dev.getKey())){
-								currentRow = new KeyboardRow();
-								currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription());
-								keyboard.add(currentRow);
+							if (item.getIdAssignee().equals(String.valueOf(dev.getKey()))){
+								KeyboardRow currentRowTask = new KeyboardRow();
+								currentRowTask.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription());
+								keyboard.add(currentRowTask);
 							}
 						}	
 					}
 
-					KeyboardRow mainScreenRowBottom = new KeyboardRow();
-					mainScreenRowBottom.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
-					keyboard.add(mainScreenRowBottom);
-					keyboardMarkup.setKeyboard(keyboard);
-					
-					messageToTelegram.setReplyMarkup(keyboardMarkup);
+					// KeyboardRow mainScreenRowBottom = new KeyboardRow();
+					// mainScreenRowBottom.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
+					// keyboard.add(mainScreenRowBottom);
+
 					messageToTelegram.setChatId(chatId);
+					keyboardMarkup.setKeyboard(keyboard);
+					messageToTelegram.setReplyMarkup(keyboardMarkup);
 
 					try {
 						execute(messageToTelegram);
@@ -145,7 +144,6 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						logger.error(e.getLocalizedMessage(), e);
 					}
 					
-
 				} else if (messageTextFromTelegram.equals("/devs")) { 
 					ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
 					List<KeyboardRow> keyboard = new ArrayList<>();
