@@ -20,7 +20,7 @@ function NewItem(props) {
   function handleSubmit(e) {
     e.preventDefault();
     if (!item.description.trim()) {
-      alert("Please provide a task description."); // Aviso al usuario si el campo está vacío
+      alert("Por favor escribe una descripción del task."); // Aviso al usuario si el campo está vacío
       return;
     }
     props.addItem(item);
@@ -39,7 +39,7 @@ function NewItem(props) {
           <Grid item xs={12}>
             <TextField
               name="description"
-              label="Task Description"
+              label="Título"
               type="text"
               variant="outlined"
               fullWidth
@@ -50,7 +50,7 @@ function NewItem(props) {
           <Grid item xs={12}>
             <TextField
               name="details"
-              label="Detailed Description"
+              label="Descripción"
               type="text"
               variant="outlined"
               fullWidth
@@ -60,31 +60,31 @@ function NewItem(props) {
           </Grid>
           <Grid item xs={4}>
             <FormControl variant="outlined" fullWidth>
-              <InputLabel>Priority</InputLabel>
+              <InputLabel>Prioridad</InputLabel>
               <Select
                 name="priority"
                 value={item.priority}
                 onChange={handleChange}
                 label="Priority"
               >
-                <MenuItem value={1}>High</MenuItem>
-                <MenuItem value={2}>Medium</MenuItem>
-                <MenuItem value={3}>Low</MenuItem>
+                <MenuItem value={1}>🟥 Alta</MenuItem>
+                <MenuItem value={2}>🟧 Media</MenuItem>
+                <MenuItem value={3}>🟨 Baja</MenuItem>
               </Select>
             </FormControl>
           </Grid>
           <Grid item xs={4}>
             <FormControl variant="outlined" fullWidth>
-              <InputLabel>Complexity</InputLabel>
+              <InputLabel>Complejidad</InputLabel>
               <Select
                 name="complexity"
                 value={item.complexity}
                 onChange={handleChange}
                 label="Complexity"
               >
-                <MenuItem value={1}>Simple</MenuItem>
-                <MenuItem value={2}>Moderate</MenuItem>
-                <MenuItem value={3}>Complex</MenuItem>
+                <MenuItem value={1}>😎 Simple</MenuItem>
+                <MenuItem value={2}>🤨 Moderada</MenuItem>
+                <MenuItem value={3}>😰 Compleja</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -97,7 +97,7 @@ function NewItem(props) {
               fullWidth
               size="large"
             >
-              {props.isInserting ? 'Adding…' : 'Add'}
+              {props.isInserting ? 'Creando...' : '🆕Crear Task🆕'}
             </Button>
           </Grid>
         </Grid>

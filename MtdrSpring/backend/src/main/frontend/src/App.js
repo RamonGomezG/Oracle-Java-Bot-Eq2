@@ -23,12 +23,12 @@ function App() {
         const remainingItems = items.filter(item => item.id !== deleteId);
         setItems(remainingItems);
       } else {
-        throw new Error('Something went wrong ...');
+        throw new Error('Algo pasó mal ...');
       }
     })
     .catch(error => {
-      console.error("Error deleting item:", error);
-      setError("Failed to delete item.");
+      console.error("Error eliminando elemento:", error);
+      setError("Fallo al eliminar el elemento.");
     });
   }
 
@@ -40,8 +40,8 @@ function App() {
         setItems(updatedItems);
       },
       error => {
-        console.error("Error updating item:", error);
-        setError("Failed to update item.");
+        console.error("Error actualizando elemento:", error);
+        setError("Fallo al actualizar el elemento.");
       }
     );
   }
@@ -60,7 +60,7 @@ function App() {
       if (response.ok) {
         return response.json();
       } else {
-        throw new Error('Something went wrong ...');
+        throw new Error('Algo pasó mal ...');
       }
     });
   }
@@ -83,12 +83,12 @@ function App() {
         reloadItems();  // Reload all items to see the new addition
         setInserting(false);
       } else {
-        throw new Error('Something went wrong ...');
+        throw new Error('Algo pasó mal ...');
       }
     }).catch(error => {
-      console.error("Error adding item:", error);
+      console.error("Error actualizando elemento:", error);
       setInserting(false);
-      setError("Failed to add item.");
+      setError("Error al actualizar elemento.");
     });
   }
 
@@ -99,7 +99,7 @@ function App() {
       if (response.ok) {
         return response.json();
       } else {
-        throw new Error('Something went wrong ...');
+        throw new Error('Algo pasó mal ...');
       }
     })
     .then(items => {
@@ -107,9 +107,9 @@ function App() {
       setItems(items);
     })
     .catch(error => {
-      console.error("Error fetching items:", error);
+      console.error("Error al hacer el fetch:", error);
       setLoading(false);
-      setError("Failed to load items.");
+      setError("Error al cargar elementos.");
     });
   }
 
@@ -121,7 +121,7 @@ function App() {
       {isLoading && <CircularProgress />}
       {!isLoading && (
         <>
-          <h2 className="section-header">Pending Tasks</h2>
+          <h2 className="section-header">🧑‍💻MIS DEVOPS TASKS🧑‍💻</h2>
           <Table>
             <TableBody>
               {items.filter(item => !item.done).map(item => (
@@ -135,19 +135,19 @@ function App() {
                   </TableCell>
                   <TableCell>
                     <Button variant="contained" onClick={(event) => toggleDone(event, item.id, item.description, !item.done, item.details, item.priority, item.complexity)} size="small">
-                      Done
+                      Terminada ✅
                     </Button>
                   </TableCell>
                   <TableCell>
                     <Button startIcon={<DeleteIcon />} variant="contained" onClick={() => deleteItem(item.id)} size="small">
-                      Delete
+                      Eliminar
                     </Button>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-          <h2 className="section-header">Completed Tasks</h2>
+          <h2 className="section-header">🧑‍💻TASKS TERMINADAS🧑‍💻</h2>
           <Table>
             <TableBody>
               {items.filter(item => item.done).map(item => (
@@ -161,12 +161,12 @@ function App() {
                   </TableCell>
                   <TableCell>
                     <Button variant="contained" onClick={(event) => toggleDone(event, item.id, item.description, !item.done, item.details, item.priority, item.complexity)} size="small">
-                      Undo
+                      Deshacer
                     </Button>
                   </TableCell>
                   <TableCell>
                     <Button startIcon={<DeleteIcon />} variant="contained" onClick={() => deleteItem(item.id)} size="small">
-                      Delete
+                      Eliminar
                     </Button>
                   </TableCell>
                 </TableRow>
