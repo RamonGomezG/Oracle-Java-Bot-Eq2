@@ -72,7 +72,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			UserState userState = userStates.getOrDefault(chatId, new UserState());
 
 			// if user is managager
-			if (user_id == 1076024199) {
+			if (user_id == 1076024199L) {
 				// ver task in progress 
 				if (messageTextFromTelegram.equals(BotCommands.TODO_LIST.getCommand())
 				|| messageTextFromTelegram.equals(BotLabels.LIST_ALL_ITEMS.getLabel())
