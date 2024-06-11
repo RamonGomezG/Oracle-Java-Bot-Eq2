@@ -101,14 +101,13 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						KeyboardRow currentRow = new KeyboardRow();
 						currentRow.add(dev.getKey().toString() + " - " + dev.getValue());
 						keyboard.add(currentRow);
-						// for (ToDoItem item : activeItems) {
-						// 	if (item.getIdAssignee().equals(dev.getKey())){
-						// 		currentRow = new KeyboardRow();
-						// 		currentRow.add(item.getIdAssignee());
-						// 		currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription());
-						// 		keyboard.add(currentRow);
-						// 	}
-						// }	
+						for (ToDoItem item : activeItems) {
+							if (item.getIdAssignee().equals(String.valueOf(dev.getKey()))){
+								KeyboardRow currentRowTask = new KeyboardRow();
+								currentRowTask.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription());
+								keyboard.add(currentRowTask);
+							}
+						}	
 					}
 
 					KeyboardRow titledone = new KeyboardRow();
@@ -122,13 +121,13 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						KeyboardRow currentRow = new KeyboardRow();
 						currentRow.add(dev.getKey().toString() + " - " + dev.getValue());
 						keyboard.add(currentRow);
-						// for (ToDoItem item : doneItems) {
-						// 	if (item.getIdAssignee().equals(dev.getKey())){
-						// 		currentRow = new KeyboardRow();
-						// 		currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription());
-						// 		keyboard.add(currentRow);
-						// 	}
-						// }	
+						for (ToDoItem item : doneItems) {
+							if (item.getIdAssignee().equals(String.valueOf(dev.getKey()))){
+								KeyboardRow currentRowTask = new KeyboardRow();
+								currentRowTask.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription());
+								keyboard.add(currentRowTask);
+							}
+						}	
 					}
 
 					// KeyboardRow mainScreenRowBottom = new KeyboardRow();
