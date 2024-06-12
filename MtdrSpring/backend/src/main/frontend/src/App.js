@@ -21,7 +21,6 @@ function App() {
   useEffect(() => {
     const ids = items.map(item => item.idAssignee).filter((value, index, self) => value && self.indexOf(value) === index);
     setUserIds(ids);
-    // Opcional: Establecer un usuario por defecto
     if (ids.length > 0 && !currentUser) {
       setCurrentUser(ids[0]);
     }
@@ -30,22 +29,16 @@ function App() {
   function reloadItems() {
     setLoading(true);
     fetch(API_LIST)
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error('Algo pasó mal ...');
-      }
-    })
-    .then(data => {
-      setLoading(false);
-      setItems(data);
-    })
-    .catch(error => {
-      console.error("Error al hacer el fetch:", error);
-      setLoading(false);
-      setError("Error al cargar elementos.");
-    });
+      .then(response => response.json())
+      .then(data => {
+        setLoading(false);
+        setItems(data);
+      })
+      .catch(error => {
+        console.error("Error al hacer el fetch:", error);
+        setLoading(false);
+        setError("Error al cargar elementos.");
+      });
   }
 
   function deleteItem(deleteId) {
@@ -95,40 +88,35 @@ function App() {
   return (
     <div className="App">
       <img src="/logo-transparente.png" alt="Logo" style={{ maxWidth: '200px', paddingBottom: '20px' }} />
-      {userIds.length > 0 && (
-        <UserSelector users={userIds} currentUser={currentUser} setCurrentUser={setCurrentUser} />
+      {userIds.length > 0 ? (
+        <UserSelector users={userIds.map(id => ({ id, name: `Usuario ${id}` }))} currentUser={currentUser} setCurrentUser={setCurrentUser} />
+      ) : (
+        <p>No hay usuarios disponibles</p>
       )}
       <NewItem addItem={addItem} isInserting={isInserting}/>
       {error && <p>Error: {error.message}</p>}
       {isLoading && <CircularProgress />}
       {!isLoading && (
-        <>
-          <Table>
-            <TableBody>
-              {items.filter(item => !item.done && item.idAssignee === currentUser).map(item => (
-                <TableRow key={item.id}>
-                  <TableCell>{item.description}</TableCell>
-                  <TableCell>{item.details}</TableCell>
-                  <TableCell>{item.priority}</TableCell>
-                  <TableCell>{item.complexity}</TableCell>
-                  <TableCell>
-                    <Moment format="MMM Do YY">{item.creation_ts}</Moment>
-                  </TableCell>
-                  <TableCell>
-                    <Button variant="contained" onClick={() => toggleDone(item.id, item.description, !item.done, item.details, item.priority, item.complexity)} size="small">
-                      Done
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button startIcon={<DeleteIcon />} variant="contained" onClick={() => deleteItem(item.id)} size="small">
-                      Delete
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </>
+        <Table>
+          <TableBody>
+            {items.filter(item => !item.done && item.idAssignee === currentUser).map(item => (
+              <TableRow key={item.id}>
+                <TableCell>{item.description}</TableCell>
+                <TableCell>{item.details}</TableCell>
+                <TableCell>{item.priority}</TableCell>
+                <TableCell>{item.complexity}</TableCell>
+                <TableCell>
+                  <Moment format="MMM Do YY">{item.creation_ts}</Moment>
+                </TableCell>
+                <TableCell>
+                  <Button variant="contained" onClick={() => deleteItem(item.id)} size="small">
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       )}
     </div>
   );
