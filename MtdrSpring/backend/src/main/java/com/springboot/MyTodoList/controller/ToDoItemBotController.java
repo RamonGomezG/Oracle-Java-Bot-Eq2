@@ -74,7 +74,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			// if user is managager
 			if (user_id == 1076024199L) {
 				// ver task in progress 
-				if (messageTextFromTelegram.equals("/TeamTasks")){
+				if (messageTextFromTelegram.equals("/teamtasks")){
 
 					SendMessage messageToTelegram = new SendMessage();
 					messageToTelegram.setChatId(chatId);
@@ -101,13 +101,15 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						KeyboardRow currentRow = new KeyboardRow();
 						currentRow.add(dev.getKey().toString() + " - " + dev.getValue());
 						keyboard.add(currentRow);
-						// for (ToDoItem item : activeItems) {
-						// 	if (item.getIdAssignee().equals(String.valueOf(dev.getKey()))){
-						// 		KeyboardRow currentRowTask = new KeyboardRow();
-						// 		currentRowTask.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription());
-						// 		keyboard.add(currentRowTask);
-						// 	}
-						// }	
+						String devID = String.valueOf(dev.getKey());
+						for (ToDoItem item : activeItems) {
+							String itemID = item.getIdAssignee();
+							if (itemID.equals(devID)){
+								KeyboardRow currentRowTask = new KeyboardRow();
+								currentRowTask.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription());
+								keyboard.add(currentRowTask);
+							}
+						}	
 					}
 
 					KeyboardRow titledone = new KeyboardRow();
@@ -170,7 +172,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						logger.error(e.getLocalizedMessage(), e);
 					}
 
-				}else if (messageTextFromTelegram.indexOf(BotLabels.TODO_DETAILS.getLabel()) != -1) {
+				} else if (messageTextFromTelegram.indexOf(BotLabels.TODO_DETAILS.getLabel()) != -1) {
 				
 					String todoSelected = messageTextFromTelegram.substring(0,messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()));
 					Integer todoId = Integer.valueOf(todoSelected);
@@ -237,7 +239,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					try {
 						SendMessage messageToTelegram = new SendMessage();
 						messageToTelegram.setChatId(chatId);
-						messageToTelegram.setText("Hola Manager! \nPara ver los tasks de tu equipo, usa el comando /tasks \nPara ver quienes conforman tu equipo, usa /devs");
+						messageToTelegram.setText("Hola Manager! \nPara ver los tasks de tu equipo, usa el comando /teamtasks \nPara ver quienes conforman tu equipo, usa /devs");
 						// send message
 						execute(messageToTelegram);
 	
