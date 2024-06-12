@@ -74,7 +74,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 			// if user is managager
 			if (user_id == 1076024199L) {
 				// ver task in progress 
-				if (messageTextFromTelegram.equals("/tasks")){
+				if (messageTextFromTelegram.equals("/TeamTasks")){
 
 					SendMessage messageToTelegram = new SendMessage();
 					messageToTelegram.setChatId(chatId);
@@ -94,7 +94,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 							.collect(Collectors.toList());
 
 					KeyboardRow titlePending = new KeyboardRow();
-					titlePending.add("Tareas en progreso");
+					titlePending.add("Tasks en progreso");
 					keyboard.add(titlePending);
 
 					for (Map.Entry<Long, String> dev : devTeam.entrySet()) {	
@@ -111,24 +111,24 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					}
 
 					KeyboardRow titledone = new KeyboardRow();
-					titledone.add("Tareas completadas");
+					titledone.add("Tasks completadas");
 					keyboard.add(titledone);
 
-					List<ToDoItem> doneItems = allItems.stream().filter(item -> item.isDone() == true)
-							.collect(Collectors.toList());
+					// List<ToDoItem> doneItems = allItems.stream().filter(item -> item.isDone() == true)
+					// 		.collect(Collectors.toList());
 
-					for (Map.Entry<Long, String> dev : devTeam.entrySet()) {	
-						KeyboardRow currentRow = new KeyboardRow();
-						currentRow.add(dev.getKey().toString() + " - " + dev.getValue());
-						keyboard.add(currentRow);
-						// for (ToDoItem item : doneItems) {
-						// 	if (item.getIdAssignee().equals(String.valueOf(dev.getKey()))){
-						// 		KeyboardRow currentRowTask = new KeyboardRow();
-						// 		currentRowTask.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription());
-						// 		keyboard.add(currentRowTask);
-						// 	}
-						// }	
-					}
+					// for (Map.Entry<Long, String> dev : devTeam.entrySet()) {	
+					// 	KeyboardRow currentRow = new KeyboardRow();
+					// 	currentRow.add(dev.getKey().toString() + " - " + dev.getValue());
+					// 	keyboard.add(currentRow);
+					// 	// for (ToDoItem item : doneItems) {
+					// 	// 	if (item.getIdAssignee().equals(String.valueOf(dev.getKey()))){
+					// 	// 		KeyboardRow currentRowTask = new KeyboardRow();
+					// 	// 		currentRowTask.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription());
+					// 	// 		keyboard.add(currentRowTask);
+					// 	// 	}
+					// 	// }	
+					// }
 
 					// KeyboardRow mainScreenRowBottom = new KeyboardRow();
 					// mainScreenRowBottom.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
