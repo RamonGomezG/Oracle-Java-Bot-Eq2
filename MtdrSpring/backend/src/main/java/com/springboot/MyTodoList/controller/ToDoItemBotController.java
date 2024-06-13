@@ -99,7 +99,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 					for (Map.Entry<Long, String> dev : devTeam.entrySet()) {	
 						KeyboardRow currentRow = new KeyboardRow();
-						currentRow.add(dev.getKey().toString() + " - " + dev.getValue() + "🙎‍♂️💻");
+						currentRow.add(dev.getKey().toString() + "- " + dev.getValue() + "🙎‍♂️💻");
 						keyboard.add(currentRow);
 						String devID = String.valueOf(dev.getKey());
 						for (ToDoItem item : activeItems) {
@@ -123,7 +123,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 					for (Map.Entry<Long, String> dev : devTeam.entrySet()) {	
 						KeyboardRow currentRow = new KeyboardRow();
-						currentRow.add(dev.getKey().toString() + " - " + dev.getValue() + "🙎‍♂️💻");
+						currentRow.add(dev.getKey().toString() + "- " + dev.getValue() + "🙎‍♂️💻");
 						keyboard.add(currentRow);
 						String devID = String.valueOf(dev.getKey());
 						for (ToDoItem item : doneItems) {
