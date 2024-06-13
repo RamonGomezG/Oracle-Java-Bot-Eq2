@@ -14,7 +14,7 @@ function App() {
 
   // Mapeo de TelegramID a nombres según la imagen
   const userNames = {
-    '1076024199': 'Luis Ángel González',
+    '6893855367': 'Luis Ángel González',
     '1038242307': 'Alexander Alexeev',
     '1076024199': 'Ramon Gómez',
     '7035839758': 'Aaron Inzunza',
