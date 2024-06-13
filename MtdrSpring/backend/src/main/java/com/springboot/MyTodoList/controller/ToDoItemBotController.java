@@ -226,7 +226,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 	
 						SendMessage messageToTelegram1 = new SendMessage();
 						messageToTelegram1.setChatId(chatId);
-						messageToTelegram1.setText( "Claro! A continuación te muestro los detalles de tu task!");
+						messageToTelegram1.setText( "Claro! A continuación te muestro los detalles de la Task!");
 						ReplyKeyboardRemove keyboardMarkup1 = new ReplyKeyboardRemove(true);
 						messageToTelegram1.setReplyMarkup(keyboardMarkup1);
 						execute(messageToTelegram1);
@@ -281,8 +281,6 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						}
 						// currentRow.add("Prioridad: " + prio + ", Complejidad: " + comp);
 						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp);
-						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
-						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + "📝");
 						keyboard.add(currentRow);
 					}
 
@@ -309,8 +307,6 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						}
 						// currentRow.add("Prioridad: " + prio + ", Complejidad: " + comp);
 						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp);
-						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UNDO.getLabel());
-						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DELETE.getLabel());
 						keyboard.add(currentRow);
 					}
 
