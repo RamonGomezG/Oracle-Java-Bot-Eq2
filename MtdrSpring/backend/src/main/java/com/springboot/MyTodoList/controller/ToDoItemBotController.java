@@ -141,11 +141,11 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						for (ToDoItem item : activeItems) {
 							if (item.getIdAssignee() != null){
 								String itemID = item.getIdAssignee();
-								if (itemID.equals(devID)){
+								// if (itemID.equals(devID)){
 									KeyboardRow currentRowTask = new KeyboardRow();
-									currentRowTask.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription());
+									currentRowTask.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + ": " + item.getIdAssignee());
 									keyboard.add(currentRowTask);
-								}
+								// }
 							}
 						}	
 					}
@@ -173,7 +173,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 							}
 						}	
 					}
-					
+
 					// KeyboardRow mainScreenRowBottom = new KeyboardRow();
 					// mainScreenRowBottom.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
 					// keyboard.add(mainScreenRowBottom);
