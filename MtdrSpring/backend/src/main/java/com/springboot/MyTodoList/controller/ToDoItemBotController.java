@@ -91,47 +91,11 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					keyboard.add(myTodoListTitleRow);
 
 					KeyboardRow titlePending = new KeyboardRow();
-					titlePending.add("Tasks en progreso 🛠️");
+					titlePending.add("🛠️ TASKS EN PROGRESO 🛠️");
 					keyboard.add(titlePending);
 
 					List<ToDoItem> activeItems = allItems.stream().filter(item -> item.isDone() == false)
 						.collect(Collectors.toList());
-
-					// for (ToDoItem item : activeItems) {
-					// 	KeyboardRow currentRow = new KeyboardRow();
-					// 	// currentRow.add(devTeam.get(Long.valueOf(item.getIdAssignee())));
-					// 	// currentRow.add(item.getIdAssignee());
-					// 	currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + '|' + item.getIdAssignee());
-					// 	keyboard.add(currentRow);
-					// }
-
-					// List<ToDoItem> pendingItems = allItems.stream().filter(item -> item.isDone() == true)
-					// 	.collect(Collectors.toList());
-
-					// for (ToDoItem item : pendingItems) {
-					// 	KeyboardRow currentRow = new KeyboardRow();
-					// 	// currentRow.add(item.getDescription());
-					// 	String prio = "";
-					// 	String comp = "";
-					// 	if(item.getPriority() <= 1) {
-					// 		prio = "🟥";
-					// 	} else if(item.getPriority() == 2) {
-					// 		prio = "🟧";
-					// 	} else if(item.getPriority() >= 3) {
-					// 		prio = "🟨";
-					// 	}
-					// 	if(item.getComplexity() <= 1) {
-					// 		comp = "😎";
-					// 	} else if(item.getComplexity() == 2) {
-					// 		comp = "🤨";
-					// 	} else if(item.getComplexity() >= 3) {
-					// 		comp = "😰";
-					// 	}
-					// 	// currentRow.add("Prioridad: " + prio + ", Complejidad: " + comp);
-					// 	currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp);
-					// 	currentRow.add(devTeam.get(Long.valueOf(item.getIdAssignee())));
-					// 	keyboard.add(currentRow);
-					// }
 
 					for (Map.Entry<Long, String> dev : devTeam.entrySet()) {	
 						KeyboardRow currentRow = new KeyboardRow();
@@ -151,7 +115,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					}
 
 					KeyboardRow titledone = new KeyboardRow();
-					titledone.add("Tasks completadas ⛳️");
+					titledone.add("⛳️ TASKS COMPLETADAS ⛳️");
 					keyboard.add(titledone);
 
 					List<ToDoItem> doneItems = allItems.stream().filter(item -> item.isDone() == true)
@@ -159,10 +123,10 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 					for (Map.Entry<Long, String> dev : devTeam.entrySet()) {	
 						KeyboardRow currentRow = new KeyboardRow();
-						currentRow.add(dev.getKey().toString() + " - " + dev.getValue());
+						currentRow.add("👤" + " " +  dev.getValue() + " " + "👤");
 						keyboard.add(currentRow);
 						String devID = String.valueOf(dev.getKey());
-						for (ToDoItem item : activeItems) {
+						for (ToDoItem item : doneItems) {
 							if (item.getIdAssignee() != null){
 								String itemID = item.getIdAssignee();
 								if (itemID.equals(devID)){
