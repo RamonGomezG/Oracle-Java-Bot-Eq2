@@ -307,8 +307,6 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 						}
 						// currentRow.add("Prioridad: " + prio + ", Complejidad: " + comp);
 						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp);
-						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UNDO.getLabel());
-						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DELETE.getLabel());
 						keyboard.add(currentRow);
 					}
 
