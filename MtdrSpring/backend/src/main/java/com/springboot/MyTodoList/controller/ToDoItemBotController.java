@@ -118,38 +118,39 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 							comp = "😰";
 						}
 						// currentRow.add("Prioridad: " + prio + ", Complejidad: " + comp);
+						// currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp);
 						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp);
-						currentRow.add(devTeam.get(Long.valueOf(item.getIdAssignee())));
+						// currentRow.add(devTeam.get(Long.valueOf(item.getIdAssignee())));
 						keyboard.add(currentRow);
 					}
 
-					List<ToDoItem> pendingItems = allItems.stream().filter(item -> item.isDone() == true)
-						.collect(Collectors.toList());
+					// List<ToDoItem> pendingItems = allItems.stream().filter(item -> item.isDone() == true)
+					// 	.collect(Collectors.toList());
 
-					for (ToDoItem item : pendingItems) {
-						KeyboardRow currentRow = new KeyboardRow();
-						// currentRow.add(item.getDescription());
-						String prio = "";
-						String comp = "";
-						if(item.getPriority() <= 1) {
-							prio = "🟥";
-						} else if(item.getPriority() == 2) {
-							prio = "🟧";
-						} else if(item.getPriority() >= 3) {
-							prio = "🟨";
-						}
-						if(item.getComplexity() <= 1) {
-							comp = "😎";
-						} else if(item.getComplexity() == 2) {
-							comp = "🤨";
-						} else if(item.getComplexity() >= 3) {
-							comp = "😰";
-						}
-						// currentRow.add("Prioridad: " + prio + ", Complejidad: " + comp);
-						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp);
-						currentRow.add(devTeam.get(Long.valueOf(item.getIdAssignee())));
-						keyboard.add(currentRow);
-					}
+					// for (ToDoItem item : pendingItems) {
+					// 	KeyboardRow currentRow = new KeyboardRow();
+					// 	// currentRow.add(item.getDescription());
+					// 	String prio = "";
+					// 	String comp = "";
+					// 	if(item.getPriority() <= 1) {
+					// 		prio = "🟥";
+					// 	} else if(item.getPriority() == 2) {
+					// 		prio = "🟧";
+					// 	} else if(item.getPriority() >= 3) {
+					// 		prio = "🟨";
+					// 	}
+					// 	if(item.getComplexity() <= 1) {
+					// 		comp = "😎";
+					// 	} else if(item.getComplexity() == 2) {
+					// 		comp = "🤨";
+					// 	} else if(item.getComplexity() >= 3) {
+					// 		comp = "😰";
+					// 	}
+					// 	// currentRow.add("Prioridad: " + prio + ", Complejidad: " + comp);
+					// 	currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp);
+					// 	currentRow.add(devTeam.get(Long.valueOf(item.getIdAssignee())));
+					// 	keyboard.add(currentRow);
+					// }
 
 					// for (Map.Entry<Long, String> dev : devTeam.entrySet()) {	
 					// 	KeyboardRow currentRow = new KeyboardRow();
