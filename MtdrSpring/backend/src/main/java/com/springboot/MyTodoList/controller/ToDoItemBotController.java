@@ -51,10 +51,10 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 		logger.info("Bot name: " + botName);
 		this.toDoItemService = toDoItemService;
 		this.botName = botName;
-		devTeam.put(6893855367L, "Luis Gon.");
-        devTeam.put(6893855368L, "Kenyu M.");
-        devTeam.put(6893855369L, "Aaron I.");
-        devTeam.put(6893855370L, "Alexander A.");
+		devTeam.put(6893855367L, "Luis Gonzalez");
+        devTeam.put(6893855368L, "Kenyu Medina");
+        devTeam.put(7035839758L, "Aaron Inzunza");
+        devTeam.put(6893855370L, "Alexander Alexeev");
 
 		// this.toDoAttribute = 0;
 		// this.addingToDo = false;
@@ -135,17 +135,17 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 					for (Map.Entry<Long, String> dev : devTeam.entrySet()) {	
 						KeyboardRow currentRow = new KeyboardRow();
-						currentRow.add(dev.getKey().toString() + " - " + dev.getValue());
+						currentRow.add("👤" + dev.getKey().toString());
 						keyboard.add(currentRow);
 						String devID = String.valueOf(dev.getKey());
 						for (ToDoItem item : activeItems) {
 							if (item.getIdAssignee() != null){
 								String itemID = item.getIdAssignee();
-								// if (itemID.equals(devID)){
+								if (itemID.equals(devID)){
 									KeyboardRow currentRowTask = new KeyboardRow();
-									currentRowTask.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + ": " + item.getIdAssignee());
+									currentRowTask.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription());
 									keyboard.add(currentRowTask);
-								// }
+								}
 							}
 						}	
 					}
