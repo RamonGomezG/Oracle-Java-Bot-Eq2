@@ -99,7 +99,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 					for (Map.Entry<Long, String> dev : devTeam.entrySet()) {	
 						KeyboardRow currentRow = new KeyboardRow();
-						currentRow.add("👤" + " " +  dev.getValue() + " " + "👤");
+						currentRow.add(dev.getKey().toString() + " - " + dev.getValue() + "🙎‍♂️💻");
 						keyboard.add(currentRow);
 						String devID = String.valueOf(dev.getKey());
 						for (ToDoItem item : activeItems) {
@@ -123,7 +123,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 					for (Map.Entry<Long, String> dev : devTeam.entrySet()) {	
 						KeyboardRow currentRow = new KeyboardRow();
-						currentRow.add("👤" + " " +  dev.getValue() + " " + "👤");
+						currentRow.add(dev.getKey().toString() + " - " + dev.getValue() + "🙎‍♂️💻");
 						keyboard.add(currentRow);
 						String devID = String.valueOf(dev.getKey());
 						for (ToDoItem item : doneItems) {
@@ -165,7 +165,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					messageToTelegram.setText("A continuación te muestro a tu equipo de desarrollo.");
 					for (Map.Entry<Long, String> dev : devTeam.entrySet()) {
 						KeyboardRow currentRow = new KeyboardRow();
-						currentRow.add(dev.getKey().toString() + " - " + dev.getValue());
+						currentRow.add(dev.getKey().toString() + "- " + dev.getValue() + "🙎‍♂️💻");
 						keyboard.add(currentRow);
 					}
 
@@ -241,6 +241,92 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					} catch (Exception e) {
 						logger.error(e.getLocalizedMessage(), e);
 					}
+
+				} else if (messageTextFromTelegram.indexOf("🙎‍♂️") != -1) {
+					String devID = messageTextFromTelegram.substring(0,messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()));
+					
+					//AGREGAR SEGREGACION
+					List<ToDoItem> allItems = getAllToDoItems();
+
+					ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+					List<KeyboardRow> keyboard = new ArrayList<>();
+
+					List<ToDoItem> activeItems = allItems.stream().filter(item -> item.isDone() == false && (String.valueOf(devID).equals(item.getIdAssignee())))
+							.collect(Collectors.toList());
+
+					// command back to main screen
+					KeyboardRow devNameLabel = new KeyboardRow();
+					devNameLabel.add(devTeam.get(Long.valueOf(devID)) + "🙎‍♂️💻");
+					keyboard.add(devNameLabel);
+
+					for (ToDoItem item : activeItems) {
+
+						KeyboardRow currentRow = new KeyboardRow();
+						// currentRow.add(item.getDescription());
+						String prio = "";
+						String comp = "";
+						if(item.getPriority() <= 1) {
+							prio = "🟥";
+						} else if(item.getPriority() == 2) {
+							prio = "🟧";
+						} else if(item.getPriority() >= 3) {
+							prio = "🟨";
+						}
+						if(item.getComplexity() <= 1) {
+							comp = "😎";
+						} else if(item.getComplexity() == 2) {
+							comp = "🤨";
+						} else if(item.getComplexity() >= 3) {
+							comp = "😰";
+						}
+						// currentRow.add("Prioridad: " + prio + ", Complejidad: " + comp);
+						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp);
+						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
+						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + "📝");
+						keyboard.add(currentRow);
+					}
+
+					List<ToDoItem> doneItems = allItems.stream().filter(item -> item.isDone() == true && (String.valueOf(devID).equals(item.getIdAssignee())))
+							.collect(Collectors.toList());
+
+					for (ToDoItem item : doneItems) {
+						KeyboardRow currentRow = new KeyboardRow();
+						String prio = "";
+						String comp = "";
+						if(item.getPriority() <= 1) {
+							prio = "🟥";
+						} else if(item.getPriority() == 2) {
+							prio = "🟧";
+						} else if(item.getPriority() >= 3) {
+							prio = "🟨";
+						}
+						if(item.getComplexity() <= 1) {
+							comp = "😎";
+						} else if(item.getComplexity() == 2) {
+							comp = "🤨";
+						} else if(item.getComplexity() >= 3) {
+							comp = "😰";
+						}
+						// currentRow.add("Prioridad: " + prio + ", Complejidad: " + comp);
+						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp);
+						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UNDO.getLabel());
+						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DELETE.getLabel());
+						keyboard.add(currentRow);
+					}
+
+					keyboardMarkup.setKeyboard(keyboard);
+
+					SendMessage messageToTelegram = new SendMessage();
+					messageToTelegram.setChatId(chatId);
+					messageToTelegram.setText("A continuación te muestro las Tasks de " + devTeam.get(Long.valueOf(devID)));
+					messageToTelegram.setReplyMarkup(keyboardMarkup);
+
+					try {
+						execute(messageToTelegram);
+					} catch (TelegramApiException e) {
+						logger.error(e.getLocalizedMessage(), e);
+					}
+			
 				} else {
 					try {
 						SendMessage messageToTelegram = new SendMessage();
