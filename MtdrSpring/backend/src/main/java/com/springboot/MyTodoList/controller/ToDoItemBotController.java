@@ -51,10 +51,10 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 		logger.info("Bot name: " + botName);
 		this.toDoItemService = toDoItemService;
 		this.botName = botName;
-		devTeam.put(6893855367L, "Luis Angel");
-        devTeam.put(6893855368L, "Kenyu Medina");
-        devTeam.put(6893855369L, "Aaron Inza");
-        devTeam.put(6893855370L, "Alexander Alexeev");
+		devTeam.put(6893855367L, "Luis G.");
+        devTeam.put(6893855368L, "Kenyu M.");
+        devTeam.put(6893855369L, "Aaron I.");
+        devTeam.put(6893855370L, "Alexander A.");
 
 		// this.toDoAttribute = 0;
 		// this.addingToDo = false;
@@ -87,40 +87,20 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					List<KeyboardRow> keyboard = new ArrayList<>();
 
 					KeyboardRow myTodoListTitleRow = new KeyboardRow();
-					myTodoListTitleRow.add("Tasks de tu equipo");
+					myTodoListTitleRow.add("🗓️ TASKS DEL SPRINT 🗓️");
 					keyboard.add(myTodoListTitleRow);
 
 					KeyboardRow titlePending = new KeyboardRow();
-					titlePending.add("Tasks en progreso");
+					titlePending.add("Tasks en progreso 🛠️");
 					keyboard.add(titlePending);
 
 					List<ToDoItem> activeItems = allItems.stream().filter(item -> item.isDone() == false)
 						.collect(Collectors.toList());
 
 					for (ToDoItem item : activeItems) {
-
 						KeyboardRow currentRow = new KeyboardRow();
-						// currentRow.add(item.getDescription());
-						String prio = "";
-						String comp = "";
-						if(item.getPriority() <= 1) {
-							prio = "🟥";
-						} else if(item.getPriority() == 2) {
-							prio = "🟧";
-						} else if(item.getPriority() >= 3) {
-							prio = "🟨";
-						}
-						if(item.getComplexity() <= 1) {
-							comp = "😎";
-						} else if(item.getComplexity() == 2) {
-							comp = "🤨";
-						} else if(item.getComplexity() >= 3) {
-							comp = "😰";
-						}
-						// currentRow.add("Prioridad: " + prio + ", Complejidad: " + comp);
-						// currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp);
-						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + " | Prioridad: " + prio + " | Complejidad: " + comp);
-						// currentRow.add(devTeam.get(Long.valueOf(item.getIdAssignee())));
+						currentRow.add(devTeam.get(Long.valueOf(item.getIdAssignee())));
+						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription());
 						keyboard.add(currentRow);
 					}
 
@@ -170,7 +150,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 
 					KeyboardRow titledone = new KeyboardRow();
-					titledone.add("Tasks completadas");
+					titledone.add("Tasks completadas ⛳️");
 					keyboard.add(titledone);
 
 					// List<ToDoItem> doneItems = allItems.stream().filter(item -> item.isDone() == true)
