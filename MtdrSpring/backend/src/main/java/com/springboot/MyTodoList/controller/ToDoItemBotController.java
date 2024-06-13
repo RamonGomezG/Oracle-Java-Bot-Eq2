@@ -51,7 +51,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 		logger.info("Bot name: " + botName);
 		this.toDoItemService = toDoItemService;
 		this.botName = botName;
-		devTeam.put(6893855367L, "Luis G.");
+		devTeam.put(6893855367L, "Luis Gon.");
         devTeam.put(6893855368L, "Kenyu M.");
         devTeam.put(6893855369L, "Aaron I.");
         devTeam.put(6893855370L, "Alexander A.");
@@ -100,8 +100,8 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					for (ToDoItem item : activeItems) {
 						KeyboardRow currentRow = new KeyboardRow();
 						// currentRow.add(devTeam.get(Long.valueOf(item.getIdAssignee())));
-						currentRow.add(item.getIdAssignee());
-						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription());
+						// currentRow.add(item.getIdAssignee());
+						currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.TODO_DETAILS.getLabel() + item.getDescription() + '|' + item.getIdAssignee());
 						keyboard.add(currentRow);
 					}
 
