@@ -104,3 +104,8 @@ button.AddButton, button.DeleteButton, button.DoneButton {
 button.AddButton:hover, button.DeleteButton:hover, button.DoneButton:hover {
   background-color: #6F915D; /* Hover color for buttons */
 }
+
+.user-selector-container {
+  margin: 16px 0px 16px;
+  width: 95%;
+}
