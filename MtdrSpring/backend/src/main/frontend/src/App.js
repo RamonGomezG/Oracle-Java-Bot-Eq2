@@ -137,22 +137,24 @@ function App() {
   return (
     <div className="App">
       <img src="/logo-transparente.png" alt="Logo" style={{ maxWidth: '200px', paddingBottom: '20px' }} />
-      <FormControl fullWidth margin="normal">
-        <InputLabel id="user-selector-label">Filtrar por usuario</InputLabel>
-        <Select
-          labelId="user-selector-label"
-          id="user-selector"
-          value={currentUser}
-          label="Usuario"
-          onChange={handleUserChange}
-        >
-          <MenuItem value="all">Todas las tasks</MenuItem>
-          {uniqueUsers.map(user => (
-            user !== 'all' && <MenuItem key={user} value={user}>{`Usuario ${user}`}</MenuItem>
-          ))}
-        </Select>
-      </FormControl>
       <NewItem addItem={addItem} isInserting={isInserting}/>
+      <div class="user-selector-container">
+        <FormControl fullWidth margin="normal">
+          <InputLabel id="user-selector-label">Filtrar por usuario</InputLabel>
+          <Select
+            labelId="user-selector-label"
+            id="user-selector"
+            value={currentUser}
+            label="Usuario"
+            onChange={handleUserChange}
+          >
+            <MenuItem value="all">Todas las tasks</MenuItem>
+            {uniqueUsers.map(user => (
+              user !== 'all' && <MenuItem key={user} value={user}>{`Usuario ${user}`}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </div>
       {error && <p>Error: {error.message}</p>}
       {isLoading && <CircularProgress />}
       {!isLoading && (
