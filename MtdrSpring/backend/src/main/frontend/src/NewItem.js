@@ -39,7 +39,7 @@ function NewItem(props) {
           <Grid item xs={12}>
             <TextField
               name="description"
-              label="Título"
+              label="Agregar Título"
               type="text"
               variant="outlined"
               fullWidth
@@ -50,7 +50,7 @@ function NewItem(props) {
           <Grid item xs={12}>
             <TextField
               name="details"
-              label="Descripción"
+              label="Agregar Descripción"
               type="text"
               variant="outlined"
               fullWidth
