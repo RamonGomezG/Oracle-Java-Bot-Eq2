@@ -175,7 +175,7 @@ function App() {
                   </TableCell>
                   <TableCell>
                     <Button variant="contained" onClick={(event) => toggleDone(event, item.id, item.description, !item.done, item.details, item.priority, item.complexity)} size="small">
-                      Terminada ✅
+                      Terminada✅
                     </Button>
                   </TableCell>
                   <TableCell>
